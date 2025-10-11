@@ -7,6 +7,64 @@
   --color-light-text: #F5F5F5;
 }
 
+/* Contenedor principal del carrusel */
+.carrusel-premios {
+  position: relative;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+/* Flechas de navegación */
+.flechas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.flechas button {
+  background-color: var(--color-gold-dark);
+  color: var(--color-white);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.flechas button:hover {
+  background-color: var(--color-gold);
+}
+
+.flechas span {
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+/* Indicadores visuales del carrusel */
+.indicadores {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.indicadores span {
+  font-size: 1.2rem;
+  color: var(--color-gold-dark);
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.indicadores .activo {
+  opacity: 1;
+}
+
+/* Animación de transición entre premios */
 .premio-card {
   position: relative;
   background-color: var(--color-white);
@@ -14,9 +72,16 @@
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  margin: 2rem auto;
-  max-width: 600px;
   text-align: center;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.premio-card.fade-out {
+  opacity: 0;
+}
+
+.premio-card.fade-in {
+  opacity: 1;
 }
 
 @keyframes fadeLoop {
@@ -79,7 +144,7 @@
   color: var(--color-dark-bg);
 }
 
-.contador{
+.contador {
   border: solid 1px var(--color-gold-dark);
   padding: 0 0 1rem 0;
   border-radius: 10px;
@@ -134,7 +199,6 @@
   font-weight: 500;
   color: var(--color-gold-dark);
 }
-
 
 /* Responsivo */
 @media (max-width: 768px) {

@@ -39,7 +39,7 @@ export default function CheckoutSidebar({
           <ul className="checkout-lista">
             {seleccionados.map((num) => (
               <li key={num} className="checkout-item">
-                <span className="checkout-numero">#{num.toString().padStart(3, '0')}</span>
+                <span className="checkout-numero">#{num.toString().padStart(4, '0')}</span>
                 <span className="checkout-precio">${precioPorNumero.toFixed(2)}</span>
                 <button className="btn-eliminar" onClick={() => onRemove(num)} title="Eliminar número">
                   <FaTrash />

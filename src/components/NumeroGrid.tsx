@@ -4,7 +4,7 @@ import { collection, onSnapshot, doc, getDoc, getDocs, setDoc, updateDoc } from 
 import { db } from '@/firebase/firebase'
 import '@/styles/NumeroGrid.css'
 
-const TOTAL_NUMEROS = 9999 // Total de números disponibles en el sorteo
+const TOTAL_NUMEROS = 9999
 
 type NumeroGridProps = {
   seleccionados: number[]
@@ -18,12 +18,11 @@ type Numero = {
 }
 
 export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGridProps) {
-  const [search, setSearch] = useState<string>('') // Filtro de búsqueda
-  const [todos, setTodos] = useState<Numero[]>([]) // Todos los números
-  const [bloqueados, setBloqueados] = useState<Numero[]>([]) // Números no seleccionables
-  const [mensajeBloqueo, setMensajeBloqueo] = useState<string | null>(null) // Mensaje de advertencia
+  const [search, setSearch] = useState<string>('')
+  const [todos, setTodos] = useState<Numero[]>([])
+  const [bloqueados, setBloqueados] = useState<Numero[]>([])
+  const [mensajeBloqueo, setMensajeBloqueo] = useState<string | null>(null)
 
-  // Genera un UUID para identificar la sesión del usuario
   const generarUUID = () =>
     'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
       const r = Math.random() * 16 | 0
@@ -31,7 +30,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
       return v.toString(16)
     })
 
-  // Obtiene o genera el sessionId único para el usuario
   const sessionId = typeof window !== 'undefined'
     ? localStorage.getItem('sessionId') || (() => {
         const id = generarUUID()
@@ -40,7 +38,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
       })()
     : ''
 
-  // Escucha en tiempo real los cambios en la colección de números
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'estadoNumeros'), (snapshot) => {
       const todosRaw = snapshot.docs.map(doc => {
@@ -52,10 +49,8 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         }
       })
 
-      // Elimina duplicados por ID
       const todosUnicos = [...new Map(todosRaw.map(n => [n.id, n])).values()]
 
-      // Filtra los números bloqueados (vendidos o reservados por otro)
       const bloqueados = todosUnicos.filter(b =>
         b.estado === 'vendido' ||
         (b.estado === 'reservado' && !!b.reservadoPor && b.reservadoPor !== sessionId)
@@ -68,7 +63,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
     return () => unsubscribe()
   }, [])
 
-  // Limpia reservas expiradas y sincroniza los seleccionados del usuario
   useEffect(() => {
     const limpiarReservasExpiradas = async () => {
       const snapshot = await getDocs(collection(db, 'estadoNumeros'))
@@ -79,7 +73,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         return data.estado === 'reservado' && data.timestamp && ahora - data.timestamp > 10 * 60 * 1000
       })
 
-      // Libera cada número expirado
       for (const docExp of expirados) {
         await updateDoc(doc(db, 'estadoNumeros', docExp.id), {
           estado: 'disponible',
@@ -88,7 +81,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         })
       }
 
-      // Actualiza los seleccionados del usuario actual
       const seleccionadosActuales = snapshot.docs
         .filter(doc => {
           const data = doc.data()
@@ -102,7 +94,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
     limpiarReservasExpiradas()
   }, [])
 
-  // Lógica para reservar o desmarcar un número
   const reservarNumero = async (num: number) => {
     const id = num.toString().padStart(4, '0')
     const ref = doc(db, 'estadoNumeros', id)
@@ -159,7 +150,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
     }
   }
 
-  // Maneja la selección visual y lógica de un número
   const handleSelect = async (num: number) => {
     const bloqueado = bloqueados.find(b => b.id === num)
 
@@ -186,11 +176,34 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
     }
   }
 
-  // Cálculos para mostrar progreso
+  const seleccionarDosAleatorios = async () => {
+    const disponibles = todos.filter(n =>
+      n.estado === 'disponible' ||
+      (n.estado === 'reservado' && n.reservadoPor === sessionId)
+    ).map(n => n.id)
+
+    const restantes = disponibles.filter(id => !seleccionados.includes(id))
+
+    if (restantes.length < 2) {
+      setMensajeBloqueo('⚠️ No hay suficientes números disponibles para seleccionar al azar.')
+      setTimeout(() => setMensajeBloqueo(null), 3000)
+      return
+    }
+
+    const seleccionadosAleatorios: number[] = []
+    while (seleccionadosAleatorios.length < 2) {
+      const randomIndex = Math.floor(Math.random() * restantes.length)
+      const candidato = restantes[randomIndex]
+      if (!seleccionadosAleatorios.includes(candidato)) {
+        await handleSelect(candidato) // ← usa la lógica completa
+        seleccionadosAleatorios.push(candidato)
+      }
+    }
+  }
+
   const disponibles = todos.filter(n => n.estado === 'disponible').length
   const porcentajeVendidos = ((bloqueados.length / TOTAL_NUMEROS) * 100).toFixed(1)
 
-  // Filtro de búsqueda
   const numerosFiltrados = [
     ...new Map(
       todos
@@ -201,7 +214,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
 
   return (
     <div className="numero-grid-container">
-      {/* Encabezado con contadores */}
       <div className="numero-grid-top-lineal">
         <h2 className="numero-titulo-lineal">Selecciona tus Números</h2>
         <div className="numero-contadores-lineal">
@@ -220,38 +232,45 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         </div>
       </div>
 
-      {/* Buscador */}
       <div className="numero-grid-header">
-        <input
-          type="text"
-          placeholder="Buscar número..."
-          value={search}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-          className="numero-busqueda"
-        />
+        <div className="numero-grid-header-inner">
+          <input
+            type="text"
+            placeholder="Buscar número..."
+            value={search}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+            className="numero-busqueda"
+          />
+
+          <button
+            className="numero-aleatorio-btn"
+            onClick={seleccionarDosAleatorios}
+          >
+            🎲 Seleccionar 2 al azar
+          </button>
+        </div>
       </div>
 
-            {/* Leyenda visual para el usuario */}
+      {/* Leyenda visual para el usuario */}
       <div className="numero-leyenda">
         <div className="leyenda-item disponible">Disponible</div>
         <div className="leyenda-item seleccionado">Seleccionado</div>
         <div className="leyenda-item vendido">Vendido</div>
       </div>
 
-      {/* Mensaje de bloqueo temporal (se oculta en 3 segundos) */}
+      {/* Mensaje de bloqueo temporal */}
       {mensajeBloqueo && (
         <div className="mensaje-bloqueo">
           {mensajeBloqueo}
         </div>
       )}
 
-      {/* Renderizado del grid de números */}
+      {/* Renderizado del grid */}
       <div className="numero-grid">
         {numerosFiltrados.map((num) => {
           const isSeleccionado = seleccionados.includes(num.id)
           const numeroFormateado = num.id.toString().padStart(4, '0')
 
-          // Determina la clase visual según el estado
           const clase = num.estado === 'vendido'
             ? 'vendido'
             : num.estado === 'reservado' && num.reservadoPor !== sessionId
@@ -264,8 +283,8 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
             <div
               key={num.id}
               className={`numero-box ${clase}`}
-              onClick={() => handleSelect(num.id)} // Siempre permite el click para mostrar mensaje
-              style={clase === 'vendido' ? { opacity: 0.6 } : {}} // Visualmente atenuado si está vendido
+              onClick={() => handleSelect(num.id)}
+              style={clase === 'vendido' ? { opacity: 0.6 } : {}}
             >
               {numeroFormateado}
             </div>

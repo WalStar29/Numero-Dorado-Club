@@ -1,7 +1,39 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import '@/styles/PremioCard.css'
+
+type Premio = {
+    id: number
+    nombre: string
+    descripcion: string
+    valor: string
+    imagen: string
+}
+
+const premios: Premio[] = [
+    {
+        id: 1,
+        nombre: 'iPhone 15 Pro Max',
+        descripcion: '256GB – Titanio Natural',
+        valor: '$1,200',
+        imagen: '/iphone.jpg',
+    },
+    {
+        id: 2,
+        nombre: 'PlayStation 5',
+        descripcion: 'Edición Digital + 2 Controles',
+        valor: '$600',
+        imagen: '/play.jpg',
+    },
+    {
+        id: 3,
+        nombre: 'Moto Honda',
+        descripcion: 'Estilo Unico',
+        valor: '$1,100',
+        imagen: '/moto.jpg',
+    },
+]
 
 type TimeLeft = {
     days: number
@@ -10,7 +42,8 @@ type TimeLeft = {
     seconds: number
 }
 
-    export default function PremioCard() {
+export default function CarruselPremios() {
+    const [index, setIndex] = useState(0)
     const [timeLeft, setTimeLeft] = useState<TimeLeft>({
         days: 0,
         hours: 0,
@@ -19,6 +52,7 @@ type TimeLeft = {
     })
 
     const drawDate = new Date('2025-11-01T20:00:00')
+    const premio = premios[index]
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -36,56 +70,65 @@ type TimeLeft = {
         return () => clearInterval(interval)
     }, [])
 
-    return (
-        <div className="premio-card">
-        <div className="badge-premio">
-            Premio Principal <span>¡ACTIVA!</span>
-        </div>
+    const handlePrev = () => setIndex((prev) => (prev === 0 ? premios.length - 1 : prev - 1))
+    const handleNext = () => setIndex((prev) => (prev === premios.length - 1 ? 0 : prev + 1))
 
-        <Image
-            src="/iphone.jpg"
-            alt="iPhone 15 Pro Max"
+    return (
+        <div className="carrusel-premios">
+        <div className="premio-card">
+            <div className="badge-premio">Premio Principal <span>¡ACTIVA!</span></div>
+
+            <Image
+            src={premio.imagen}
+            alt={premio.nombre}
             width={400}
             height={300}
             className="premio-imagen"
             priority
-        />
+            />
 
-        <h2 className="premio-nombre">iPhone 15 Pro Max</h2>
-        <p className="premio-descripcion">256GB – Titanio Natural</p>
-        <p className="premio-valor">Valor: $1,200</p>
+            <div className="flechas">
+            <button onClick={handlePrev}>←</button>
+            <span>Premio {premio.id} de 3</span>
+            <button onClick={handleNext}>→</button>
+            </div>
 
-        <div className="premio-info">
+            <h2 className="premio-nombre">{premio.nombre}</h2>
+            <p className="premio-descripcion">{premio.descripcion}</p>
+            <p className="premio-valor">Valor: {premio.valor}</p>
+
+            <div className="premio-info">
             <span>Sorteo: 01 Nov 2025</span>
             <span>·</span>
             <span>1000 números</span>
-        </div>
+            </div>
 
-        <div className="contador">
+            <div className="contador">
             <p className="contador-label">⏳ Tiempo restante:</p>
             <div className="contador-numeros">
-            <div>
+                <div>
                 <span>{timeLeft.days}</span>
                 <label>días</label>
-            </div>
-            <div>
+                </div>
+                <div>
                 <span>{timeLeft.hours}</span>
                 <label>horas</label>
-            </div>
-            <div>
+                </div>
+                <div>
                 <span>{timeLeft.minutes}</span>
                 <label>min</label>
-            </div>
-            <div>
+                </div>
+                <div>
                 <span>{timeLeft.seconds}</span>
                 <label>seg</label>
+                </div>
             </div>
             </div>
-        </div>
 
-        <p className="promo-text">
+            <p className="promo-text">
             <span>¡Solo $1 por número!</span> Selecciona tus números de la suerte y participa por este increíble premio.
-        </p>
+            </p>
+        </div>
         </div>
     )
 }

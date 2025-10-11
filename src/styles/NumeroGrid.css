@@ -59,7 +59,7 @@
   border: solid 1px var(--color-red);
 }
 
-/* ✅ Porcentaje visual */
+/* Porcentaje visual */
 .numero-porcentaje-lineal {
   width: 100%;
   margin-top: 0.5rem;
@@ -93,22 +93,46 @@
   transition: width 0.3s ease;
 }
 
-/* Buscador */
+/* Buscador y botón aleatorio centrados */
 .numero-grid-header {
+  margin-bottom: 1rem;
+}
+
+.numero-grid-header-inner {
   display: flex;
-  justify-content: flex-start;
-  margin-bottom: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .numero-busqueda {
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-  width: 200px;
   border: solid 1px var(--color-gray);
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
   background-color: var(--color-white);
   color: var(--color-black);
+}
+
+.numero-aleatorio-btn {
+  padding: 10px 20px;
+  background-color: var(--color-gold);
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: auto;
+  min-width: 200px;
+  text-align: center;
+}
+
+.numero-aleatorio-btn:hover {
+  background-color: var(--color-gold-dark);
 }
 
 /* Leyenda horizontal */
@@ -184,7 +208,21 @@
   cursor: not-allowed;
 }
 
-/* Responsivo */
+/* Mensaje de bloqueo */
+.mensaje-bloqueo {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  margin: 1rem auto;
+  border: 1px solid #ffeeba;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+  max-width: 500px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .numero-grid-container {
     padding: 1.5rem;
@@ -193,11 +231,6 @@
   .numero-grid-top-lineal {
     align-items: flex-start;
     gap: 0.5rem;
-  }
-
-  .numero-busqueda {
-    width: 100%;
-    margin-bottom: 1rem;
   }
 
   .numero-leyenda {
@@ -212,17 +245,4 @@
   .numero-porcentaje-lineal {
     font-size: 0.85rem;
   }
-}
-
-.mensaje-bloqueo {
-  background-color: #fff3cd;
-  color: #856404;
-  padding: 1rem;
-  margin: 1rem auto;
-  border: 1px solid #ffeeba;
-  border-radius: 6px;
-  text-align: center;
-  font-weight: 500;
-  max-width: 500px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.1);
 }
