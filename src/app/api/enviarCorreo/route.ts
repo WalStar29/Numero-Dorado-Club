@@ -1,55 +1,61 @@
-// src/app/api/enviarCorreo/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 
 export async function POST(req: NextRequest) {
-    const { venta } = await req.json()
+  try {
+    const body = await req.json()
+    const { venta } = body
 
     if (!venta || !venta.correo) {
-        return NextResponse.json({ error: 'Datos incompletos' }, { status: 400 })
+      return NextResponse.json({ error: 'Datos incompletos' }, { status: 400 })
     }
 
     const listaNumeros = Array.isArray(venta.numeros)
-        ? venta.numeros.map((n: string | number) => `#${n.toString().padStart(4, '0')}`).join(', ')
-        : `#${venta.numero?.toString().padStart(4, '0')}`
+      ? venta.numeros.map((n: string | number) => `#${n.toString().padStart(4, '0')}`).join(', ')
+      : `#${venta.numero?.toString().padStart(4, '0')}`
 
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
+      service: 'gmail',
+      secure: true,
+      auth: {
         user: process.env.CORREO_REMITENTE,
         pass: process.env.CLAVE_APP_GMAIL
-        }
+      }
     })
 
     const mensaje = `
-    Hola ${venta.nombre},
+Hola ${venta.nombre},
 
-    🎉 Gracias por tu compra en *Número Dorado Club*
+🎉 Gracias por tu compra en Número Dorado Club
 
-    🧾 Detalles de tu compra:
-    - Teléfono: ${venta.telefono}
-    - Banco: ${venta.banco}
-    - Método de pago: ${venta.metodo}
-    - Monto: ${venta.monto || '—'}
-    - Números asignados: ${listaNumeros}
-    - Referencia: ${venta.referencia}
+🧾 Detalles de tu compra:
+- Teléfono: ${venta.telefono}
+- Banco: ${venta.banco}
+- Método de pago: ${venta.metodo}
+- Monto: ${venta.monto || '—'}
+- Números asignados: ${listaNumeros}
+- Referencia: ${venta.referencia}
 
-    Si tienes alguna duda, estamos aquí para ayudarte.
+Si tienes alguna duda, estamos aquí para ayudarte.
 
-    — El equipo de Número Dorado Club
+— El equipo de Número Dorado Club
     `
 
-    try {
-        await transporter.sendMail({
-        from: `"Número Dorado Club" <${process.env.CORREO_REMITENTE}>`,
-        to: venta.correo,
-        subject: '✅ Confirmación de tu compra',
-        text: mensaje
-        })
+    await transporter.sendMail({
+      from: `"Número Dorado Club" <${process.env.CORREO_REMITENTE}>`,
+      to: venta.correo,
+      subject: '✅ Confirmación de tu compra',
+      text: mensaje
+    })
 
-        return NextResponse.json({ ok: true })
-    } catch (error) {
-        console.error('❌ Error al enviar correo:', error)
-        return NextResponse.json({ error: 'Error al enviar correo' }, { status: 500 })
-    }
+    return NextResponse.json({ ok: true })
+  } catch (error: any) {
+    console.error('❌ Error al enviar correo:', error?.message || error)
+    return NextResponse.json({ error: error?.message || 'Error desconocido' }, { status: 500 })
+  }
+}
+
+// Manejo explícito de GET para evitar error 405
+export async function GET() {
+  return NextResponse.json({ error: 'Método GET no permitido' }, { status: 405 })
 }
