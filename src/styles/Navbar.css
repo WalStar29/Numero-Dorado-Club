@@ -1,0 +1,109 @@
+:root {
+  --color-white: #ffffff;
+  --color-gold: #FFD700;
+  --color-gold-dark: #c18200;
+  --color-black: #000000;
+  --color-shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* Navbar principal */
+.navbar {
+  background-color: var(--color-white);
+  padding: 1rem 2rem;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 0 12px var(--color-shadow);
+}
+
+/* Contenedor interno */
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Logo con imagen */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: var(--color-gold-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.navbar-logo img {
+  height: 40px;
+  width: auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+/* Botón Admin */
+.navbar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-button {
+  background-color: var(--color-gold);
+  color: var(--color-black);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-button:hover {
+  background-color: var(--color-gold-dark);
+  color: var(--color-white);
+  transform: scale(1.05);
+}
+
+/* Responsive ajustes */
+@media (max-width: 768px) {
+  .navbar-container {
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .navbar-logo {
+    font-size: 1.3rem;
+    gap: 0.6rem;
+  }
+
+  .navbar-logo img {
+    height: 36px;
+  }
+
+  .navbar-button {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-logo {
+    font-size: 1.1rem;
+    gap: 0.4rem;
+  }
+
+  .navbar-logo img {
+    height: 32px;
+  }
+
+  .navbar-button {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

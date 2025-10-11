@@ -1,0 +1,350 @@
+'use client'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+import Navbar from '@/components/Navbar'
+import ResumenCompra from '@/components/ResumenCompra'
+import '@/styles/Checkout.css'
+import { FaCreditCard, FaMobileAlt, FaRegCopy } from 'react-icons/fa'
+import { SiBinance } from 'react-icons/si'
+import { MdWarningAmber, MdContactPage } from 'react-icons/md'
+import { setDoc, doc, getDoc } from 'firebase/firestore'
+import { db } from '@/firebase/firebase'
+
+export default function Page() {
+  const router = useRouter()
+
+  const [seleccionados, setSeleccionados] = useState<number[]>([])
+  const [nombre, setNombre] = useState('')
+  const [apellido, setApellido] = useState('')
+  const [correo, setCorreo] = useState('')
+  const [telefono, setTelefono] = useState('')
+  const [metodoPago, setMetodoPago] = useState('')
+  const [bancoOperacion, setBancoOperacion] = useState('')
+  const [referencia, setReferencia] = useState('')
+  const [copiado, setCopiado] = useState<string | null>(null)
+  const [mostrarModal, setMostrarModal] = useState(false)
+
+  const precioPorNumero = 1.0
+  const tasaCambio = 200
+  const totalUSD = seleccionados.length * precioPorNumero
+  const totalBs = totalUSD * tasaCambio
+  const total = totalUSD
+
+  const metodoActivo = (metodo: string) =>
+    metodoPago === metodo ? 'btn-metodo activo' : 'btn-metodo'
+
+  const renderDato = (label: string, valor: string) =>
+    valor.trim() !== '' ? <p><strong>{label}:</strong> {valor}</p> : null
+
+  const copiarTexto = (texto: string) => {
+    navigator.clipboard.writeText(texto)
+    setCopiado(texto)
+    setTimeout(() => setCopiado(null), 2000)
+  }
+
+  useEffect(() => {
+    const guardados = localStorage.getItem('carritoNumeros')
+    if (guardados) {
+      try {
+        const parsed = JSON.parse(guardados)
+        if (Array.isArray(parsed)) {
+          setSeleccionados(parsed)
+        }
+      } catch (error) {
+        console.error('Error al leer el carrito:', error)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    document.body.style.overflow = mostrarModal ? 'hidden' : 'auto'
+  }, [mostrarModal])
+
+  const formValido =
+    nombre.trim() !== '' &&
+    apellido.trim() !== '' &&
+    correo.trim() !== '' &&
+    telefono.trim() !== '' &&
+    metodoPago !== '' &&
+    referencia.trim() !== '' &&
+    seleccionados.length > 0 &&
+    (metodoPago === 'binance' || bancoOperacion.trim() !== '')
+
+  const handleEnviarWhatsApp = async () => {
+  const numerosUnicos = Array.from(new Set(seleccionados)).map(n =>
+    n.toString().padStart(4, '0')
+  )
+
+  const nuevaVenta = {
+    nombre,
+    apellido,
+    telefono,
+    correo,
+    banco: bancoOperacion,
+    metodo: metodoPago === 'movil' ? 'Pago móvil' : 'Binance Pay',
+    numeros: numerosUnicos,
+    referencia,
+    monto: metodoPago === 'movil'
+      ? `Bs ${totalBs.toFixed(2)}`
+      : `$${totalUSD.toFixed(2)}`
+  }
+
+  try {
+    const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
+    const docExistente = await getDoc(referenciaDoc)
+
+    if (docExistente.exists()) {
+      alert('⚠️ Ya existe una venta con esta referencia. Usa una diferente.')
+      return
+    }
+
+    // ✅ Registrar la venta
+    await setDoc(referenciaDoc, nuevaVenta)
+    console.log('✅ Venta registrada en Firestore')
+
+    // 🔒 Marcar como reservado por sistema para bloquear visualmente
+    for (const num of numerosUnicos) {
+      const ref = doc(db, 'estadoNumeros', num)
+      await setDoc(ref, {
+        estado: 'reservado',
+        reservadoPor: 'confirmado', // <- Esto hace que se vea como bloqueado para todos
+        timestamp: Date.now()
+      }, { merge: true })
+    }
+
+    // 🧼 Limpiar carrito y estado local
+    localStorage.removeItem('carritoNumeros')
+    setSeleccionados([])
+
+  } catch (error) {
+    console.error('❌ Error al guardar venta en Firestore:', error)
+    return
+  }
+
+  // 📲 Redirigir a WhatsApp
+  const mensaje = `Hola, quiero confirmar mi compra:\n\n` +
+    `Números: ${nuevaVenta.numeros.map(n => `#${n}`).join(', ')}\n` +
+    `Nombre: ${nuevaVenta.nombre} ${nuevaVenta.apellido}\n` +
+    `Correo: ${nuevaVenta.correo}\n` +
+    `Teléfono: ${nuevaVenta.telefono}\n` +
+    `Método de pago: ${nuevaVenta.metodo}\n` +
+    `Monto: ${nuevaVenta.monto}\n` +
+    `Referencia: ${nuevaVenta.referencia}\n` +
+    (metodoPago === 'movil' ? `Banco: ${nuevaVenta.banco}` : '')
+
+  const numeroDestino = '584147996937'
+  const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`
+  window.open(url, '_blank')
+
+  // 🧭 Redirigir al menú principal
+  setTimeout(() => {
+    setMostrarModal(false)
+    document.body.style.overflow = 'auto'
+    router.push('/')
+  }, 500)
+}
+
+  return (
+    <div>
+      <Navbar />
+        {seleccionados.length > 0 ? (
+          <ResumenCompra
+            seleccionados={seleccionados}
+            precioPorNumero={precioPorNumero}
+            premio="iPhone 15 Pro Max 256GB"
+            fechaSorteo="01 de noviembre de 2025"
+            tasaCambio={tasaCambio}
+          />
+        ) : (
+          <p style={{ textAlign: 'center' }}>No hay números en el carrito.</p>
+        )}
+
+        <div className="resumen-box">
+          <h3 className="titulo-dorado"> <MdContactPage/> Información de Contacto</h3>
+
+          <div className="campo-contacto">
+            <label htmlFor="name">Nombre</label>
+            <input type="text" id="name" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+          </div>
+
+          <div className="campo-contacto">
+            <label htmlFor="lastname">Apellido</label>
+            <input type="text" id="lastname" value={apellido} onChange={(e) => setApellido(e.target.value)} required />
+          </div>
+
+          <div className="campo-contacto">
+            <label htmlFor="correo">Correo Electrónico</label>
+            <input type="email" id="correo" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
+          </div>
+
+          <div className="campo-contacto">
+            <label htmlFor="telefono">Número de Teléfono</label>
+            <input type="tel" id="telefono" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
+          </div>
+        </div>
+
+        <div className="metodo-pago" style={{ marginTop: '2rem' }}>
+          <h4 className="titulo-dorado"><FaCreditCard /> Método de Pago</h4>
+          <div className="opciones-pago">
+            <button className={metodoActivo('binance')} onClick={() => setMetodoPago('binance')}>
+              <SiBinance /> Binance Pay<br /><small>Popular · USDT</small>
+            </button>
+            <button className={metodoActivo('movil')} onClick={() => setMetodoPago('movil')}>
+              <FaMobileAlt /> Pago Móvil<br /><small>Popular · Todos los bancos venezolanos</small>
+            </button>
+          </div>
+
+          {metodoPago === 'binance' && (
+            <div className="info-pago">
+              <h4>Binance</h4>
+              {renderDato('Binance ID', '123456789')}
+              {renderDato('Email Binance', 'rifas')}
+              <h5>Importante:</h5>
+              <ul>
+                <li>Envía el monto exacto mostrado en tu carrito</li>
+                <li>Guarda el comprobante de pago</li>
+                <li>El número de operación es obligatorio</li>
+                <li>Los pagos se verifican en 24–48 horas</li>
+              </ul>
+            </div>
+          )}
+
+          {metodoPago === 'movil' && (
+            <div className="info-pago">
+              <h4>Pago Móvil</h4>
+              {renderDato('Banco', 'Banesco')}
+              {renderDato('Teléfono', '0412-123-4567')}
+              {renderDato('Cédula', 'V-12.345.678')}
+              {renderDato('Titular', 'Juan Pérez')}
+              <p>
+                <strong>Monto a pagar:</strong> Bs {totalBs.toFixed(2)}
+                <button
+                  className="btn-copiar"
+                  onClick={() => copiarTexto(totalBs.toFixed(2))}
+                  title="Copiar solo el monto"
+                >
+                  <FaRegCopy />
+                </button>
+                {copiado === totalBs.toFixed(2) && <span className="copiado-msg">Copiado ✅</span>}
+              </p>
+              <h5>Importante:</h5>
+              <ul>
+                <li>Envía el monto exacto mostrado en tu carrito</li>
+                <li>Guarda el comprobante de pago</li>
+                <li>El número de operación es obligatorio</li>
+                <li>Los pagos se verifican en 24–48 horas</li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="referencia-pago" style={{ marginTop: '2rem' }}>
+          <h4 className="titulo-dorado">Número de Operación</h4>
+
+          <div className="campo-banco-operacion">
+            <label htmlFor="bancoOperacion" className="label-referencia">
+              Banco con el que realizaste la operación <span className="requerido">*</span>
+            </label>
+            <select id="bancoOperacion" name="bancoOperacion" value={bancoOperacion} onChange={(e) => setBancoOperacion(e.target.value)} required className="select-banco" disabled={metodoPago !== 'movil'}>
+              <option value="">Selecciona tu banco</option>
+              <option value="0102 - Banco de Venezuela">0102 - Banco de Venezuela</option>
+              <option value="0104 - Banco Venezolano de Crédito">0104 - Banco Venezolano de Crédito</option>
+              <option value="0105 - Banco Mercantil">0105 - Banco Mercantil</option>
+              <option value="0108 - Banco Provincial">0108 - Banco Provincial</option>
+              <option value="0114 - Banesco">0114 - Banesco</option>
+              <option value="0115 - Banco Exterior">0115 - Banco Exterior</option>
+              <option value="0128 - Banco Caroní">0128 - Banco Caroní</option>
+              <option value="0134 - Bancaribe">0134 - Bancaribe</option>
+              <option value="0137 - Sofitasa">0137 - Sofitasa</option>
+              <option value="0146 - BOD">0146 - BOD</option>
+              <option value="0151 - BFC">0151 - BFC</option>
+              <option value="0156 - 100% Banco">0156 - 100% Banco</option>
+              <option value="0163 - Banco del Tesoro">0163 - Banco del Tesoro</option>
+              <option value="0166 - Banco Agrícola de Venezuela">0166 - Banco Agrícola</option>
+              <option value="0171 - Banco Activo">0171 - Banco Activo</option>
+              <option value="0172 - Bancamiga">0172 - Bancamiga</option>
+              <option value="0174 - Banplus">0174 - Banplus</option>
+              <option value="0175 - Banco Bicentenario">0175 - Bicentenario</option>
+              <option value="0191 - Banco Nacional de Crédito">0191 - BNC</option>
+            </select>
+          </div>
+
+          <label htmlFor="referencia" className="label-referencia">
+            Número de Referencia / Transacción <span className="requerido">*</span>
+          </label>
+          <input type="text" id="referencia" name="referencia" placeholder="Ej: 123456789 o TXN123ABC" value={referencia} onChange={(e) => setReferencia(e.target.value)} required className="input-referencia"/>
+          <p className="texto-ayuda">
+            Ingresa el número de referencia, transacción o comprobante que te proporcionó tu banco o plataforma de pago.
+          </p>
+          <p className="texto-ayuda2">
+            <MdWarningAmber style={{ color: 'var(--color-red)', fontSize: '1.2rem' }} />
+            <strong>Este número es esencial para verificar tu pago.</strong> Asegúrate de copiarlo correctamente del comprobante.
+          </p>
+        </div>
+
+        <div className="confirmacion-compra">
+            <button
+              className={`btn-confirmar ${formValido ? 'activo' : 'desactivado'}`}
+              disabled={!formValido}
+              onClick={() => setMostrarModal(true)}
+              >
+              Confirmar Compra – Total: {
+                metodoPago === 'movil'
+                ? `Bs ${totalBs.toFixed(2)}`
+                : `$${total.toFixed(2)}`
+              }
+            </button>
+
+            {mostrarModal && (
+              <div className="modal-overlay">
+                <div className="modal-contenido">
+                  <h3>✅ Confirmación de Compra</h3>
+                  <h4>Números Seleccionados</h4>
+                    <ul className="lista-numeros-modal">
+                      {seleccionados.map((num) => (
+                        <li key={num}>#{num.toString().padStart(3, '0')}</li>
+                      ))}
+                    </ul>
+                  <h4>Información de Contacto</h4>
+                  <p><strong>Nombre:</strong> {nombre}</p>
+                  <p><strong>Apellido:</strong> {apellido}</p>
+                  <p><strong>Correo Electrónico:</strong> {correo}</p>
+                  <p><strong>Teléfono:</strong> {telefono}</p>
+
+                  <h4>Método de Pago</h4>
+                  <p><strong>Seleccionado:</strong> {metodoPago === 'movil' ? 'Pago Móvil' : 'Binance Pay'}</p>
+                  <p><strong>Monto:</strong> {
+                    metodoPago === 'movil'
+                    ? `Bs ${totalBs.toFixed(2)}`
+                    : `$${total.toFixed(2)}`
+                  }</p>
+
+                  <h4>Referencia de Pago</h4>
+                  <p><strong>Número de Operación:</strong> {referencia}</p>
+                  {metodoPago === 'movil' && (
+                    <p><strong>Banco utilizado:</strong> {bancoOperacion || 'No seleccionado'}</p>
+                  )}
+
+                  <h4>Total de la Compra</h4>
+                  <p><strong>Total en dólares:</strong> ${total.toFixed(2)}</p>
+                  <p><strong>Total en bolívares:</strong> Bs {totalBs.toFixed(2)}</p>
+
+                  <div className="modal-botones">
+                    <button
+                      className="btn-enviar-modal"
+                      onClick={handleEnviarWhatsApp}
+                    >
+                    Enviar
+                    </button>
+                    <button className="btn-cerrar-modal" onClick={() => setMostrarModal(false)}>
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+    </div>
+  )
+}

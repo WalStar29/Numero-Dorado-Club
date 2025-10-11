@@ -1,0 +1,181 @@
+:root {
+  --color-white: #ffffff;
+  --color-gold: #FFD700;
+  --color-gold-dark: #c18200;
+  --color-black: #000000;
+  --color-dark-bg: #0F0F0F;
+  --color-light-text: #F5F5F5;
+  --color-gray: #808080;
+  --color-green: #00ff7f;
+  --color-red: #ff4c4c;
+}
+
+.checkout-sidebar {
+  background-color: var(--color-white);
+  color: #f5f5f5;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.lineal{
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Título y cantidad */
+.checkout-titulo {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-gold-dark);
+}
+
+.checkout-cantidad {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--color-gold-dark);
+  display: inline-block;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  color: var(--color-white);
+}
+
+/* Mensaje si está vacío */
+.checkout-vacio {
+  font-style: italic;
+  color: var(--color-gray);
+}
+
+/* Lista de números */
+.checkout-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  border-bottom: solid 1px var(--color-black);
+}
+
+.checkout-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+}
+
+.checkout-numero {
+  font-weight: 600;
+}
+
+.checkout-precio {
+  color: var(--color-black);
+  font-weight: 600;
+}
+
+/* Resumen de precios */
+.checkout-resumen {
+  margin-bottom: 1rem;
+}
+
+.checkout-linea {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+/* Botones */
+.checkout-botones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.btn-pagar {
+  background-color: var(--color-gold-dark);
+  color: var(--color-white);
+  border: none;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-pagar:hover {
+  background-color: #e6c200;
+}
+
+.btn-limpiar {
+  background-color: transparent;
+  color: #ff4c4c;
+  border: 1px solid #ff4c4c;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-limpiar:hover {
+  background-color: #ff4c4c;
+  color: #fff;
+}
+
+/* Mensaje de login */
+.checkout-login-msg {
+  font-size: 0.85rem;
+  color: #ff4c4c;
+  font-style: italic;
+}
+
+.btn-eliminar {
+  background: none;
+  border: none;
+  color: #ff4c4c;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  transform: scale(1.2);
+}
+
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+  .checkout-sidebar {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .checkout-titulo {
+    font-size: 1.2rem;
+  }
+
+  .checkout-cantidad {
+    font-size: 1rem;
+  }
+
+  .checkout-item {
+    font-size: 0.95rem;
+  }
+
+  .btn-pagar,
+  .btn-limpiar {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .checkout-login-msg {
+    font-size: 0.8rem;
+  }
+}

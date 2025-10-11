@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'export',
+  images: {
+    unoptimized: true, // 🔥 Esto desactiva la optimización automática
+  },
 };
 
 export default nextConfig;

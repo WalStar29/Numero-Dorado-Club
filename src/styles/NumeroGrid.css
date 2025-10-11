@@ -1,0 +1,228 @@
+:root {
+  --color-white: #ffffff;
+  --color-gold: #FFD700;
+  --color-gold-dark: #c18200;
+  --color-black: #000000;
+  --color-dark-bg: #0F0F0F;
+  --color-light-text: #F5F5F5;
+  --color-gray: #808080;
+  --color-green: #00ff7f;
+  --color-red: #ff4c4c;
+}
+
+.numero-grid-container {
+  padding: 2rem;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  max-width: 900px;
+  margin: 2rem auto;
+}
+
+/* Encabezado lineal y responsivo */
+.numero-grid-top-lineal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.numero-titulo-lineal {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: bold;
+  color: var(--color-gold-dark);
+  margin: 0;
+}
+
+.numero-contadores-lineal {
+  display: flex;
+  gap: 1rem;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+}
+
+.numero-contadores-lineal .disponibles {
+  color: var(--color-green);
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 0.1rem 0.5rem;
+  border: solid 1px var(--color-green);
+}
+
+.numero-contadores-lineal .vendidos {
+  color: var(--color-red);
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 0.1rem 0.5rem;
+  border: solid 1px var(--color-red);
+}
+
+/* ✅ Porcentaje visual */
+.numero-porcentaje-lineal {
+  width: 100%;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.porcentaje-texto {
+  font-weight: 500;
+  color: var(--color-black);
+}
+
+.porcentaje-valor {
+  font-weight: bold;
+  color: var(--color-gold-dark);
+}
+
+.porcentaje-barra {
+  width: 100%;
+  height: 8px;
+  background-color: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.porcentaje-barra-fill {
+  height: 100%;
+  background-color: var(--color-gold);
+  transition: width 0.3s ease;
+}
+
+/* Buscador */
+.numero-grid-header {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.numero-busqueda {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  width: 200px;
+  border: solid 1px var(--color-gray);
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+/* Leyenda horizontal */
+.numero-leyenda {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.leyenda-item {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.leyenda-item.disponible {
+  background-color: var(--color-gold-dark);
+  color: var(--color-white);
+}
+
+.leyenda-item.seleccionado {
+  background-color: var(--color-gold);
+  color: var(--color-dark-bg);
+}
+
+.leyenda-item.vendido {
+  background-color: var(--color-gray);
+  color: var(--color-white);
+}
+
+/* Grilla de números */
+.numero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 8px;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.numero-box {
+  padding: 0.6rem;
+  text-align: center;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.numero-box:hover {
+  transform: scale(1.05);
+}
+
+.numero-box.disponible {
+  background-color: var(--color-gold-dark);
+  color: var(--color-black);
+}
+
+.numero-box.seleccionado {
+  background-color: var(--color-gold);
+  color: var(--color-dark-bg);
+}
+
+.numero-box.vendido {
+  background-color: var(--color-gray);
+  color: var(--color-white);
+  cursor: not-allowed;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .numero-grid-container {
+    padding: 1.5rem;
+  }
+
+  .numero-grid-top-lineal {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .numero-busqueda {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .numero-leyenda {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .numero-grid {
+    max-height: 300px;
+  }
+
+  .numero-porcentaje-lineal {
+    font-size: 0.85rem;
+  }
+}
+
+.mensaje-bloqueo {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  margin: 1rem auto;
+  border: 1px solid #ffeeba;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+  max-width: 500px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}

@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "numerodoradoclub-c145e",
+    "production": "numerodarado"
+  },
+  "targets": {},
+  "etags": {}
+}
