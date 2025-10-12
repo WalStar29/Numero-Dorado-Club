@@ -1,3 +1,17 @@
+/* === VARIABLES DE COLOR (asegúrate de tener estas en :root) === */
+
+:root {
+  --color-gold: #f5c542;
+  --color-gold-dark: #e0a800;
+  --color-gold-light: #fff8e1;
+  --color-white: #ffffff;
+  --color-black: #222222;
+  --color-gray: #cccccc;
+  --color-light-text: #f0f0f0;
+  --color-green: #28a745;
+  --color-red: #dc3545;
+}
+
 /* === FORMULARIO DE CONTACTO === */
 .resumen-box {
   margin-top: 2rem;
@@ -27,7 +41,6 @@
 
 .campo-contacto input {
   width: 95%;
-  display: flex;
   padding: 0.5rem;
   border: 1px solid var(--color-gray);
   border-radius: 6px;
@@ -68,7 +81,6 @@
 
 .btn-metodo:hover {
   border-color: var(--color-gold);
-  background-color: #ffffff;
 }
 
 .btn-metodo.activo {
@@ -90,24 +102,17 @@
   border-radius: 12px;
 }
 
-.info-pago h4 {
-  text-align: left;
-}
-
-.info-pago ol h4 {
-  font-size: 1.1rem;
+.info-pago h4,
+.info-pago h5 {
   font-weight: 700;
   color: var(--color-gold-dark);
   margin-bottom: 0.5rem;
 }
 
 .info-pago h5 {
-  font-size: 1rem;
-  font-weight: 700;
   margin-top: 2rem;
-  margin-bottom: 0.5rem;
-  color: var(--color-gold-dark);
   display: flex;
+  font-size: 1rem;
 }
 
 .info-pago p {
@@ -120,42 +125,34 @@
   gap: 0.5rem;
 }
 
-/* === LISTAS SIN SANGRÍA === */
-.info-pago ol{
-  margin-top: 0.5rem;
+/* === LISTAS === */
+.info-pago ol,
+.info-pago ul {
   font-size: 0.95rem;
-  padding-left: 0;
-  margin-left: 0;
   list-style-position: inside;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 0.3rem;
   text-align: left;
+  margin: 0.5rem 0;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.info-pago ol {
+  padding-left: 0;
 }
 
 .info-pago ul {
-    background-color: var(--color-gold-light);
-    color: var(--color-gold-dark);
-    border: solid 1px var(--color-gold-dark);
-    font-size: 0.95rem;
-    padding: 1rem;
-    border-radius: 12px;
-    list-style-position: inside;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    text-align: left;
+  background-color: var(--color-gold-light);
+  color: var(--color-gold-dark);
+  border: solid 1px var(--color-gold-dark);
 }
 
 .info-pago li {
-  margin: 0;
-  padding: 0;
-  width: 100%;
   line-height: 1.4;
+  width: 100%;
 }
-
-
 
 /* === BOTÓN DE COPIAR === */
 .btn-copiar {
@@ -173,7 +170,6 @@
   color: var(--color-gold);
 }
 
-/* === MENSAJE COPIADO ✅ === */
 .copiado-msg {
   margin-left: 0.5rem;
   font-size: 0.85rem;
@@ -181,7 +177,6 @@
   font-weight: 600;
   animation: fadeOut 2s ease forwards;
 }
-
 
 /* === REFERENCIA DE PAGO === */
 .referencia-pago {
@@ -193,11 +188,10 @@
 }
 
 .label-referencia {
-  display: block;
+  display: flex;
   font-weight: 600;
   color: var(--color-black);
   margin-bottom: 0.5rem;
-  display: flex;
 }
 
 .requerido {
@@ -205,16 +199,19 @@
   margin-left: 0.2rem;
 }
 
-.input-referencia {
+.input-referencia,
+.select-banco {
   width: 95%;
   padding: 0.6rem;
   font-size: 1rem;
+  border-radius: 6px;
   border: 1px solid var(--color-gray);
-  border-radius: 8px;
   margin-bottom: 1rem;
+  background-color: #f9f9f9;
 }
 
-.texto-ayuda {
+.texto-ayuda,
+.texto-ayuda2 {
   text-align: left;
   font-size: 0.9rem;
   color: var(--color-black);
@@ -223,30 +220,11 @@
 
 .texto-ayuda2 {
   background-color: var(--color-gold-light);
-  text-align: left;
   padding: 1rem;
   border-radius: 12px;
-  font-size: 0.9rem;
-  color: var(--color-black);
-  margin-bottom: 0.4rem;
 }
 
-.campo-banco-operacion {
-  margin-top: 1rem;
-}
-
-.select-banco {
-  width: 95%;
-  padding: 0.6rem;
-  margin-bottom: 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
-  background-color: #f9f9f9;
-}
-
-
-/* === BOTON DE PAGO === */
+/* === BOTÓN DE CONFIRMACIÓN === */
 .confirmacion-compra {
   margin: 1rem 0 2rem 0;
   padding: 1rem 2rem;
@@ -275,8 +253,7 @@
   opacity: 0.6;
 }
 
-
-/* Fondo oscuro que bloquea scroll */
+/* === MODAL === */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -288,10 +265,8 @@
   justify-content: center;
   align-items: center;
   z-index: 999;
-  overflow: hidden;
 }
 
-/* Contenedor del modal con scroll interno */
 .modal-contenido {
   background: #fff;
   padding: 2rem;
@@ -307,15 +282,13 @@
   position: relative;
 }
 
-/* Título principal */
 .modal-contenido h3 {
   margin-bottom: 1.2rem;
   font-size: 1.5rem;
-  color: #28a745;
+  color: var(--color-green);
   text-align: center;
 }
 
-/* Subtítulos */
 .modal-contenido h4 {
   margin-top: 1.4rem;
   margin-bottom: 0.6rem;
@@ -325,14 +298,12 @@
   padding-bottom: 0.3rem;
 }
 
-/* Párrafos de datos */
 .modal-contenido p {
   margin: 0.3rem 0;
   font-size: 0.95rem;
   line-height: 1.4;
 }
 
-/* Lista de números centrada */
 .lista-numeros-modal {
   list-style: none;
   padding-left: 0;
@@ -355,38 +326,58 @@
 /* Botones del modal */
 .modal-botones {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .btn-enviar-modal {
   background: linear-gradient(to right, #f5c542, #e0a800);
   color: #222;
   border: none;
-  padding: 0.6rem 1.4rem;
-  border-radius: 6px;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
   font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
   transition: transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .btn-enviar-modal:hover {
   transform: scale(1.05);
 }
 
-.btn-cerrar-modal {
-  background: #dc3545;
-  color: white;
+/* Botón flotante ❌ en esquina superior */
+.btn-cerrar-x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
   border: none;
-  padding: 0.6rem 1.4rem;
-  border-radius: 6px;
-  font-weight: bold;
+  font-size: 1.5rem;
+  color: #333;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: transform 0.2s ease;
+  z-index: 10;
 }
 
-.btn-cerrar-modal:hover {
-  background: #c82333;
+.btn-cerrar-x:hover {
+  transform: scale(1.2);
+  color: var(--color-gold-dark);
+}
+
+/* Mensaje emocional de confirmación */
+.mensaje-confirmacion {
+  margin-top: 1.5rem;
+  background-color: var(--color-gold-light);
+  border-left: 4px solid var(--color-gold-dark);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.5;
 }
 
 /* Animación de entrada */
@@ -401,69 +392,44 @@
   }
 }
 
-/* Responsivo para pantallas pequeñas */
-@media (max-width: 480px) {
-  .modal-contenido {
-    padding: 1.2rem;
-  }
-
-  .modal-botones {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .btn-enviar-modal,
-  .btn-cerrar-modal {
-    width: 100%;
-  }
-}
-
-
-/* Responsivo para pantallas pequeñas */
-@media (max-width: 480px) {
-  .modal-contenido {
-    padding: 1.2rem;
-  }
-
-  .modal-botones {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .btn-enviar-modal,
-  .btn-cerrar-modal {
-    width: 100%;
-  }
-}
-
-
-
 @keyframes fadeOut {
   0% { opacity: 1; }
   80% { opacity: 1; }
   100% { opacity: 0; }
 }
 
-/* Íconos dentro de títulos como <h4><FaCreditCard /> Método de Pago</h4> */
-.titulo-dorado svg {
-  margin-right: 0.5rem;
-  vertical-align: middle;
-  font-size: 1.3rem;
-  color: var(--color-gold-dark);
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 480px) {
+  .modal-contenido {
+    padding: 1.2rem;
+  }
+
+  .modal-botones {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn-enviar-modal {
+    width: 100%;
+  }
+
+  .btn-cerrar-x {
+    top: 8px;
+    right: 8px;
+    font-size: 1.3rem;
+  }
+
+  .mensaje-confirmacion {
+    font-size: 0.9rem;
+  }
 }
 
-/* Íconos dentro de botones de método de pago */
-.btn-metodo svg {
+/* Íconos dentro de títulos y botones */
+.titulo-dorado svg,
+.btn-metodo svg,
+.texto-ayuda2 svg {
   margin-right: 0.5rem;
   vertical-align: middle;
   font-size: 1.2rem;
   color: var(--color-gold-dark);
-}
-
-/* Ícono de alerta en texto explicativo */
-.texto-ayuda2 svg {
-  margin-right: 0.4rem;
-  vertical-align: middle;
-  font-size: 1.1rem;
-  color: var(--color-red);
 }

@@ -90,6 +90,34 @@ export default function Page() {
       : `$${totalUSD.toFixed(2)}`
   }
 
+  const mensaje = `Hola, quiero confirmar mi compra:\n\n` +
+    `Números: ${nuevaVenta.numeros.map(n => `#${n}`).join(', ')}\n` +
+    `Nombre: ${nuevaVenta.nombre} ${nuevaVenta.apellido}\n` +
+    `Correo: ${nuevaVenta.correo}\n` +
+    `Teléfono: ${nuevaVenta.telefono}\n` +
+    `Método de pago: ${nuevaVenta.metodo}\n` +
+    `Monto: ${nuevaVenta.monto}\n` +
+    `Referencia: ${nuevaVenta.referencia}\n` +
+    (metodoPago === 'movil' ? `Banco: ${nuevaVenta.banco}` : '')
+
+  const numeroDestino = '584147996937'
+  const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`
+
+  // ✅ Confirmación previa del usuario
+  const confirmar = window.confirm(
+    '¿Deseas enviar los datos por WhatsApp ahora?\n\nEsto es necesario para validar tu compra.'
+  )
+
+  if (!confirmar) return
+
+  // 📲 Intentar abrir WhatsApp
+  const ventana = window.open(url, '_blank')
+
+  if (!ventana || ventana.closed || typeof ventana.closed === 'undefined') {
+    alert('❌ No se pudo abrir WhatsApp. Verifica tu conexión o configuración del navegador.')
+    return
+  }
+
   try {
     const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
     const docExistente = await getDoc(referenciaDoc)
@@ -103,47 +131,33 @@ export default function Page() {
     await setDoc(referenciaDoc, nuevaVenta)
     console.log('✅ Venta registrada en Firestore')
 
-    // 🔒 Marcar como reservado por sistema para bloquear visualmente
+    // 🔒 Marcar como reservado
     for (const num of numerosUnicos) {
       const ref = doc(db, 'estadoNumeros', num)
       await setDoc(ref, {
         estado: 'reservado',
-        reservadoPor: 'confirmado', // <- Esto hace que se vea como bloqueado para todos
+        reservadoPor: 'confirmado',
         timestamp: Date.now()
       }, { merge: true })
     }
 
-    // 🧼 Limpiar carrito y estado local
+    // 🧼 Limpiar estado local
     localStorage.removeItem('carritoNumeros')
     setSeleccionados([])
 
+    // 🧭 Redirigir
+    setTimeout(() => {
+      setMostrarModal(false)
+      document.body.style.overflow = 'auto'
+      router.push('/')
+    }, 500)
+
   } catch (error) {
     console.error('❌ Error al guardar venta en Firestore:', error)
-    return
+    alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
   }
-
-  // 📲 Redirigir a WhatsApp
-  const mensaje = `Hola, quiero confirmar mi compra:\n\n` +
-    `Números: ${nuevaVenta.numeros.map(n => `#${n}`).join(', ')}\n` +
-    `Nombre: ${nuevaVenta.nombre} ${nuevaVenta.apellido}\n` +
-    `Correo: ${nuevaVenta.correo}\n` +
-    `Teléfono: ${nuevaVenta.telefono}\n` +
-    `Método de pago: ${nuevaVenta.metodo}\n` +
-    `Monto: ${nuevaVenta.monto}\n` +
-    `Referencia: ${nuevaVenta.referencia}\n` +
-    (metodoPago === 'movil' ? `Banco: ${nuevaVenta.banco}` : '')
-
-  const numeroDestino = '584147996937'
-  const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`
-  window.open(url, '_blank')
-
-  // 🧭 Redirigir al menú principal
-  setTimeout(() => {
-    setMostrarModal(false)
-    document.body.style.overflow = 'auto'
-    router.push('/')
-  }, 500)
 }
+
 
   return (
     <div>
@@ -297,53 +311,78 @@ export default function Page() {
             </button>
 
             {mostrarModal && (
-              <div className="modal-overlay">
-                <div className="modal-contenido">
-                  <h3>✅ Confirmación de Compra</h3>
-                  <h4>Números Seleccionados</h4>
-                    <ul className="lista-numeros-modal">
-                      {seleccionados.map((num) => (
-                        <li key={num}>#{num.toString().padStart(3, '0')}</li>
-                      ))}
-                    </ul>
-                  <h4>Información de Contacto</h4>
-                  <p><strong>Nombre:</strong> {nombre}</p>
-                  <p><strong>Apellido:</strong> {apellido}</p>
-                  <p><strong>Correo Electrónico:</strong> {correo}</p>
-                  <p><strong>Teléfono:</strong> {telefono}</p>
+  <div className="modal-overlay">
+    <div className="modal-contenido">
+      <button
+        className="btn-cerrar-x"
+        onClick={() => setMostrarModal(false)}
+        aria-label="Cerrar modal"
+      >
+        ✖
+      </button>
 
-                  <h4>Método de Pago</h4>
-                  <p><strong>Seleccionado:</strong> {metodoPago === 'movil' ? 'Pago Móvil' : 'Binance Pay'}</p>
-                  <p><strong>Monto:</strong> {
-                    metodoPago === 'movil'
-                    ? `Bs ${totalBs.toFixed(2)}`
-                    : `$${total.toFixed(2)}`
-                  }</p>
+      <h3>✅ Confirmación de Compra</h3>
 
-                  <h4>Referencia de Pago</h4>
-                  <p><strong>Número de Operación:</strong> {referencia}</p>
-                  {metodoPago === 'movil' && (
-                    <p><strong>Banco utilizado:</strong> {bancoOperacion || 'No seleccionado'}</p>
-                  )}
+      <section>
+        <h4>Números Seleccionados</h4>
+        <ul className="lista-numeros-modal">
+          {[...new Set(seleccionados)].map((num) => (
+            <li key={num}>#{num.toString().padStart(3, '0')}</li>
+          ))}
+        </ul>
+      </section>
 
-                  <h4>Total de la Compra</h4>
-                  <p><strong>Total en dólares:</strong> ${total.toFixed(2)}</p>
-                  <p><strong>Total en bolívares:</strong> Bs {totalBs.toFixed(2)}</p>
+      <section>
+        <h4>Información de Contacto</h4>
+        <p><strong>Nombre:</strong> {nombre}</p>
+        <p><strong>Apellido:</strong> {apellido}</p>
+        <p><strong>Correo Electrónico:</strong> {correo}</p>
+        <p><strong>Teléfono:</strong> {telefono}</p>
+      </section>
 
-                  <div className="modal-botones">
-                    <button
-                      className="btn-enviar-modal"
-                      onClick={handleEnviarWhatsApp}
-                    >
-                    Enviar
-                    </button>
-                    <button className="btn-cerrar-modal" onClick={() => setMostrarModal(false)}>
-                      Cerrar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+      <section>
+        <h4>Método de Pago</h4>
+        <p><strong>Seleccionado:</strong> {metodoPago === 'movil' ? 'Pago Móvil' : 'Binance Pay'}</p>
+        <p><strong>Monto:</strong> {
+          metodoPago === 'movil'
+            ? `Bs ${totalBs.toFixed(2)}`
+            : `$${total.toFixed(2)}`
+        }</p>
+      </section>
+
+      <section>
+        <h4>Referencia de Pago</h4>
+        <p><strong>Número de Operación:</strong> {referencia}</p>
+        {metodoPago === 'movil' && (
+          <p><strong>Banco utilizado:</strong> {bancoOperacion || 'No seleccionado'}</p>
+        )}
+      </section>
+
+      <section>
+        <h4>Total de la Compra</h4>
+        <p><strong>Total en dólares:</strong> ${total.toFixed(2)}</p>
+        <p><strong>Total en bolívares:</strong> Bs {totalBs.toFixed(2)}</p>
+      </section>
+
+      <section className="mensaje-confirmacion">
+        <p>
+          🛡️ <strong>Importante:</strong> Asegúrese de que todos los datos estén correctos. Esta información será utilizada para comunicarnos con usted y validar su participación en el sorteo del <strong>Número Dorado</strong>. ¡Mucha suerte! 🍀
+        </p>
+      </section>
+
+      <div className="modal-botones solo-enviar">
+        <button
+          className="btn-enviar-modal"
+          onClick={handleEnviarWhatsApp}
+        >
+          Enviar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
           </div>
     </div>
   )

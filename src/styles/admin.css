@@ -261,3 +261,11 @@
   background-color: #d58512;
   transform: scale(0.98);
 }
+
+.modal-botones{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  border: solid red 1px;
+}

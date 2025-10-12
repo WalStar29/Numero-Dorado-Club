@@ -19,6 +19,11 @@ export default function CheckoutSidebar({
   const total = seleccionados.length * precioPorNumero
 
   const handleCheckout = () => {
+    if (seleccionados.length < 2) {
+      alert('⚠️ Debes seleccionar al menos 2 números para continuar con la compra.')
+      return
+    }
+
     localStorage.setItem('carritoNumeros', JSON.stringify(seleccionados))
     router.push('/checkout')
   }
@@ -41,7 +46,11 @@ export default function CheckoutSidebar({
               <li key={num} className="checkout-item">
                 <span className="checkout-numero">#{num.toString().padStart(4, '0')}</span>
                 <span className="checkout-precio">${precioPorNumero.toFixed(2)}</span>
-                <button className="btn-eliminar" onClick={() => onRemove(num)} title="Eliminar número">
+                <button
+                  className="btn-eliminar"
+                  onClick={() => onRemove(num)}
+                  title="Eliminar número"
+                >
                   <FaTrash />
                 </button>
               </li>
@@ -60,8 +69,12 @@ export default function CheckoutSidebar({
           </div>
 
           <div className="checkout-botones">
-            <button className="btn-pagar" onClick={handleCheckout}>Proceder al Pago</button>
-            <button className="btn-limpiar" onClick={onRemoveAll}>Limpiar Carrito</button>
+            <button className="btn-pagar" onClick={handleCheckout}>
+              Proceder al Pago
+            </button>
+            <button className="btn-limpiar" onClick={onRemoveAll}>
+              Limpiar Carrito
+            </button>
           </div>
         </>
       )}
