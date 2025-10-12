@@ -90,40 +90,38 @@ export default function Page() {
       : `$${totalUSD.toFixed(2)}`
   }
 
-  const mensaje = `Hola, quiero confirmar mi compra:\n\n` +
-    `Números: ${nuevaVenta.numeros.map(n => `#${n}`).join(', ')}\n` +
-    `Nombre: ${nuevaVenta.nombre} ${nuevaVenta.apellido}\n` +
-    `Correo: ${nuevaVenta.correo}\n` +
-    `Teléfono: ${nuevaVenta.telefono}\n` +
-    `Método de pago: ${nuevaVenta.metodo}\n` +
-    `Monto: ${nuevaVenta.monto}\n` +
-    `Referencia: ${nuevaVenta.referencia}\n` +
-    (metodoPago === 'movil' ? `Banco: ${nuevaVenta.banco}` : '')
-
-  const numeroDestino = '584147996937'
-  const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`
-
-  // ✅ Confirmación previa del usuario
-  const confirmar = window.confirm(
-    '¿Deseas enviar los datos por WhatsApp ahora?\n\nEsto es necesario para validar tu compra.'
-  )
-
-  if (!confirmar) return
-
-  // 📲 Intentar abrir WhatsApp
-  const ventana = window.open(url, '_blank')
-
-  if (!ventana || ventana.closed || typeof ventana.closed === 'undefined') {
-    alert('❌ No se pudo abrir WhatsApp. Verifica tu conexión o configuración del navegador.')
-    return
-  }
-
   try {
     const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
     const docExistente = await getDoc(referenciaDoc)
 
     if (docExistente.exists()) {
       alert('⚠️ Ya existe una venta con esta referencia. Usa una diferente.')
+      return
+    }
+
+    // ✅ Confirmación previa del usuario
+    const confirmar = window.confirm(
+      '¿Deseas enviar los datos por WhatsApp ahora?\n\nEsto es necesario para validar tu compra.'
+    )
+
+    if (!confirmar) return
+
+    const mensaje = `Hola, quiero confirmar mi compra:\n\n` +
+      `Números: ${nuevaVenta.numeros.map(n => `#${n}`).join(', ')}\n` +
+      `Nombre: ${nuevaVenta.nombre} ${nuevaVenta.apellido}\n` +
+      `Correo: ${nuevaVenta.correo}\n` +
+      `Teléfono: ${nuevaVenta.telefono}\n` +
+      `Método de pago: ${nuevaVenta.metodo}\n` +
+      `Monto: ${nuevaVenta.monto}\n` +
+      `Referencia: ${nuevaVenta.referencia}\n` +
+      (metodoPago === 'movil' ? `Banco: ${nuevaVenta.banco}` : '')
+
+    const numeroDestino = '584147996937'
+    const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`
+    const ventana = window.open(url, '_blank')
+
+    if (!ventana || ventana.closed || typeof ventana.closed === 'undefined') {
+      alert('❌ No se pudo abrir WhatsApp. Verifica tu conexión o configuración del navegador.')
       return
     }
 
@@ -157,7 +155,6 @@ export default function Page() {
     alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
   }
 }
-
 
   return (
     <div>

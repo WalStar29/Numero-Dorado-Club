@@ -14,51 +14,30 @@
 .admin-panel-container {
   background-color: var(--gray);
   border-radius: var(--radius);
-  padding: 0rem;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
 }
 
+/* Título principal */
 .admin-title {
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
   color: var(--gold-dark);
   margin-bottom: 2rem;
 }
 
-.admin-form {
+/* Filtros */
+.admin-filtros {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
-.admin-input,
-.admin-search {
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: var(--radius);
-  font-size: 1rem;
-  background-color: var(--white);
-  transition: var(--transition);
-}
-
-.admin-input:focus,
-.admin-search:focus {
-  outline: none;
-  border-color: var(--gold-dark);
-  box-shadow: 0 0 0 2px rgba(193, 130, 0, 0.2);
-}
-
-.admin-error {
-  color: var(--danger);
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.admin-button,
-.admin-filtros button,
-.admin-button-small {
+.admin-filtros button {
   background-color: var(--gold);
   color: var(--black);
   font-weight: 600;
@@ -68,23 +47,12 @@
   cursor: pointer;
   box-shadow: var(--shadow);
   transition: var(--transition);
-  text-align: center;
 }
 
-.admin-button:hover,
-.admin-filtros button:hover,
-.admin-button-small:hover {
+.admin-filtros button:hover {
   background-color: var(--gold-dark);
   color: var(--white);
   transform: translateY(-2px);
-}
-
-.admin-filtros {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  justify-content: center;
 }
 
 .admin-filtros .activo {
@@ -94,11 +62,36 @@
   transform: scale(1.05);
 }
 
+/* Barra de búsqueda */
+.admin-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.admin-search {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  background-color: var(--white);
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+.admin-search:focus {
+  outline: none;
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 2px rgba(193, 130, 0, 0.2);
+}
+
+/* Grid de números */
 .admin-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1rem;
-  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .admin-card {
@@ -128,6 +121,7 @@
   color: var(--black);
 }
 
+/* Estados visuales */
 .estado-disponible {
   background-color: var(--white);
 }
@@ -150,15 +144,17 @@
   letter-spacing: 0.5px;
 }
 
+/* Ventas */
 .ventas-grid {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   width: 100%;
+  margin-bottom: 2rem;
 }
 
 .venta-card {
-  background-color: var(--gray);
+  background-color: var(--white);
   padding: 1.5rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -186,6 +182,12 @@
   border-left: 6px solid green;
 }
 
+.venta-denegada {
+  background-color: #ffe5e5;
+  border-left: 6px solid #d32f2f;
+}
+
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -212,9 +214,36 @@
 .modal-buttons {
   display: flex;
   justify-content: space-around;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
+/* Botón de reset */
+.admin-button-reset {
+  background-color: #f0ad4e;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 1rem auto;
+  display: block;
+}
+
+.admin-button-reset:hover {
+  background-color: #ec971f;
+  transform: scale(1.03);
+}
+
+.admin-button-reset:active {
+  background-color: #d58512;
+  transform: scale(0.98);
+}
+
+/* Responsive */
 @media (max-width: 600px) {
   .admin-panel-container {
     padding: 1rem;
@@ -239,33 +268,64 @@
   }
 }
 
-.admin-button-reset {
-  background-color: #f0ad4e; /* Amarillo dorado */
-  color: white;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
+
+/* Botón principal */
+.admin-button,
+.admin-button-small,
+.confirm-button,
+.deny-button {
+  background-color: var(--gold);
+  color: var(--black);
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--gold-dark);
+  border-radius: var(--radius);
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  text-align: center;
 }
 
-.admin-button-reset:hover {
-  background-color: #ec971f;
-  transform: scale(1.03);
+/* Hover general */
+.admin-button:hover,
+.admin-button-small:hover,
+.confirm-button:hover,
+.deny-button:hover {
+  background-color: var(--gold-dark);
+  color: var(--white);
+  transform: translateY(-2px);
 }
 
-.admin-button-reset:active {
-  background-color: #d58512;
-  transform: scale(0.98);
+/* Botón de confirmación */
+.confirm-button {
+  margin-right: 5%;
+  background-color: #4CAF50;
+  border-color: #388E3C;
+  color: white;
 }
 
-.modal-botones{
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  border: solid red 1px;
+.confirm-button:hover {
+  background-color: #388E3C;
+}
+
+/* Botón de denegación */
+.deny-button {
+  background-color: #d32f2f;
+  border-color: #b71c1c;
+  color: white;
+}
+
+.deny-button:hover {
+  background-color: #b71c1c;
+}
+
+/* Botón de cancelar en modal */
+.cancel-button {
+  background-color: #999;
+  border-color: #666;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #666;
 }
