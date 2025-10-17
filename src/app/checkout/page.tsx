@@ -107,7 +107,6 @@ export default function Page() {
     if (!confirmar) return
 
     const mensaje = `Hola, quiero confirmar mi compra:\n\n` +
-      `Números: ${nuevaVenta.numeros.map(n => `#${n}`).join(', ')}\n` +
       `Nombre: ${nuevaVenta.nombre} ${nuevaVenta.apellido}\n` +
       `Correo: ${nuevaVenta.correo}\n` +
       `Teléfono: ${nuevaVenta.telefono}\n` +
