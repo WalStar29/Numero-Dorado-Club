@@ -1,49 +1,28 @@
 :root {
-  --color-white: #ffffff;
-  --color-gold: #FFD700;
-  --color-gold-dark: #c18200;
-  --color-gold-light: #fdf6d8;
-  --color-black: #000000;
-  --color-dark-bg: #0F0F0F;
-  --color-light-text: #F5F5F5;
-  --color-gray: #808080;
-  --color-green: #00ff7f;
-  --color-red: #ff4c4c;
-}
-
-/* === CONTENEDOR PRINCIPAL === */
-.form-compra {
-  background-color: var(--color-white);
-  border-radius: 12px;
-  padding: 0.1rem;
+  --color-bg-primary: #ffdd00;
+  --color-accent: #ffcd0d;
+  --color-accent-hover: #ffdf2c;
+  --color-text-primary: #c9c9c9;
+  --color-text-shadow: #000000;
+  /* 🔠 Tipografía */
+  --font-size-base: 0.95rem;
+  --font-size-small: 0.85rem;
 }
 
 /* === TÍTULOS === */
 .form-compra h3 {
   margin-bottom: 0.5rem;
-  color: var(--color-gold-dark);
-}
-
-.form-compra .ti {
-  text-align: left;
-  margin-bottom: 1.5rem;
-  color: var(--color-black);
-  padding-left: 2rem;
-  font-size: 15px;
+  color: var(--color-accent);
 }
 
 .titulo-dorado {
-  font-weight: 700;
-  color: var(--color-gold-dark);
-  margin-bottom: 1rem;
-  text-align: left;
-  border-bottom: 2px solid var(--color-gold);
+  border-bottom: 2px solid var(--color-accent-hover);
   padding-bottom: 0.5rem;
 }
 
 .subtitulo {
   font-weight: 600;
-  color: var(--color-black);
+  color: var(--color-text-shadow);
   margin-bottom: 0.5rem;
   text-align: left;
 }
@@ -51,10 +30,10 @@
 /* === MENSAJE VACÍO === */
 .mensaje-vacio {
   text-align: center;
-  font-size: 1rem;
-  color: var(--color-gray);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
   padding: 2rem;
-  background-color: var(--color-gold-light);
+  background-color: var(--color-accent-hover);
   border-radius: 8px;
 }
 
@@ -68,7 +47,7 @@
 .lista-numeros {
   list-style: none;
   padding: 0;
-  border-bottom: 1px solid var(--color-gray);
+  border-bottom: 1px solid var(--color-text-primary);
 }
 
 .numero-item {
@@ -77,40 +56,41 @@
   margin-bottom: 0.25rem;
   border-radius: 4px;
   font-weight: 500;
-  color: var(--color-black);
+  color: var(--color-text-shadow);
 }
 
 .numero,
 .precio {
-  color: var(--color-black);
+  color: var(--color-text-shadow);
   margin-bottom: 0.5rem;
 }
 
 .resumen-datos {
-  border-top: 1px solid var(--color-gray);
+  border-top: 1px solid var(--color-text-primary);
   flex-direction: column;
 }
 
 .resumen-datos p {
   display: flex;
   justify-content: space-between;
-  font-size: 1rem;
-  color: var(--color-black);
+  font-size: var(--font-size-base);
+  color: var(--color-text-shadow);
 }
 
 .resumen-premio {
   margin-top: 1rem;
   padding: 0 1rem;
   border-radius: 12px;
-  background-color: var(--color-gold-light);
-  border: 1px solid var(--color-gold-dark);
+  background-color: var(--color-accent-hover);
+  border: 1px solid var(--color-accent);
   flex-direction: column;
 }
 
 .resumen-premio p {
   display: flex;
   justify-content: space-between;
-  font-size: 1rem;
-  color: var(--color-black);
+  font-size: var(--font-size-base);
+  color: var(--color-text-shadow);
   font-weight: 500;
 }
+

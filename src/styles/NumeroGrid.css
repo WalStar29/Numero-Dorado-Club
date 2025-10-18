@@ -1,26 +1,30 @@
 :root {
-  --color-white: #ffffff;
-  --color-gold: #FFD700;
-  --color-gold-dark: #c18200;
-  --color-black: #000000;
-  --color-dark-bg: #0F0F0F;
-  --color-light-text: #F5F5F5;
-  --color-gray: #808080;
-  --color-green: #00ff7f;
-  --color-red: #ff4c4c;
+  /* 🎨 Colores base y de acento */
+  --color-bg-primary: #ffdd00;
+  --color-accent: #ffcd0d;
+  --color-accent-hover: #ffdf2c;
+
+  /* 🖋️ Colores de texto y contraste */
+  --color-text-primary: #c9c9c9;
+  --color-text-shadow: #000000;
+
+  /* 🔠 Tipografía */
+  --font-size-base: 0.95rem;
+  --font-size-small: 0.85rem;
 }
 
+/* 🧱 Contenedor principal */
 .numero-grid-container {
   padding: 2rem;
-  background-color: var(--color-white);
-  color: var(--color-black);
+  background-color: white;
+  color: var(--color-text-shadow);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   max-width: 900px;
   margin: 2rem auto;
 }
 
-/* Encabezado lineal y responsivo */
+/* 🧭 Encabezado lineal */
 .numero-grid-top-lineal {
   display: flex;
   flex-wrap: wrap;
@@ -30,11 +34,27 @@
   margin-bottom: 1rem;
 }
 
+/* 🍀 Trébol decorativo */
+img[src$="trebol.svg"] {
+  display: block;
+  margin: 0 auto 1rem auto;
+  width: 48px;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+img[src$="trebol.svg"]:hover {
+  transform: scale(1.1) rotate(-5deg);
+}
+
 .numero-titulo-lineal {
   font-size: clamp(1.2rem, 2.5vw, 1.6rem);
   font-weight: bold;
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
   margin: 0;
+  width: 100%;
+  text-align: center;
 }
 
 .numero-contadores-lineal {
@@ -44,26 +64,26 @@
 }
 
 .numero-contadores-lineal .disponibles {
-  color: var(--color-green);
+  color: var(--color-accent);
   font-weight: 600;
   border-radius: 5px;
   padding: 0.1rem 0.5rem;
-  border: solid 1px var(--color-green);
+  border: solid 1px var(--color-accent);
 }
 
 .numero-contadores-lineal .vendidos {
-  color: var(--color-red);
+  color: var(--color-text-shadow);
   font-weight: 600;
   border-radius: 5px;
   padding: 0.1rem 0.5rem;
-  border: solid 1px var(--color-red);
+  border: solid 1px var(--color-text-shadow);
 }
 
-/* Porcentaje visual */
+/* 📊 Porcentaje visual */
 .numero-porcentaje-lineal {
   width: 100%;
   margin-top: 0.5rem;
-  font-size: 0.9rem;
+  font-size: var(--font-size-small);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -71,29 +91,29 @@
 
 .porcentaje-texto {
   font-weight: 500;
-  color: var(--color-black);
+  color: var(--color-text-shadow);
 }
 
 .porcentaje-valor {
   font-weight: bold;
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
 }
 
 .porcentaje-barra {
   width: 100%;
   height: 8px;
-  background-color: #eee;
+  background-color: var(--color-text-primary);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .porcentaje-barra-fill {
   height: 100%;
-  background-color: var(--color-gold);
+  background-color: var(--color-accent);
   transition: width 0.3s ease;
 }
 
-/* Buscador y botón aleatorio centrados */
+/* 🔍 Buscador y botón aleatorio */
 .numero-grid-header {
   margin-bottom: 1rem;
 }
@@ -109,17 +129,17 @@
 .numero-busqueda {
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  border: solid 1px var(--color-gray);
-  font-size: 1rem;
+  border: solid 1px var(--color-text-shadow);
+  font-size: var(--font-size-base);
   width: 100%;
   max-width: 300px;
-  background-color: var(--color-white);
-  color: var(--color-black);
+  background-color: white;
+  color: var(--color-text-shadow);
 }
 
 .numero-aleatorio-btn {
   padding: 10px 20px;
-  background-color: var(--color-gold);
+  background-color: var(--color-accent);
   border: none;
   border-radius: 6px;
   font-weight: bold;
@@ -132,10 +152,10 @@
 }
 
 .numero-aleatorio-btn:hover {
-  background-color: var(--color-gold-dark);
+  background-color: var(--color-accent-hover);
 }
 
-/* Leyenda horizontal */
+/* 🧾 Leyenda horizontal */
 .numero-leyenda {
   display: flex;
   gap: 0.5rem;
@@ -144,7 +164,7 @@
 }
 
 .leyenda-item {
-  font-size: 0.9rem;
+  font-size: var(--font-size-small);
   font-weight: 600;
   padding: 0.3rem 0.6rem;
   border-radius: 6px;
@@ -152,30 +172,30 @@
 }
 
 .leyenda-item.disponible {
-  background-color: var(--color-gold-dark);
-  color: var(--color-white);
+  background-color: white;
+  border: solid 1px var(--color-text-shadow);
 }
 
 .leyenda-item.seleccionado {
-  background-color: var(--color-gold);
-  color: var(--color-dark-bg);
+  background-color: var(--color-accent-hover);
+  border: solid 1px var(--color-text-shadow);
 }
 
 .leyenda-item.vendido {
-  background-color: var(--color-gray);
-  color: var(--color-white);
+  background-color: var(--color-text-primary);
+  border: solid 1px var(--color-text-shadow);
 }
 
-/* Grilla de números */
+/* 🎲 Grilla de números */
 .numero-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
   gap: 8px;
   max-height: 400px;
   overflow-y: auto;
-  padding-right: 8px;
   border-radius: 8px;
-  background-color: #ffffff;
+  padding: 2px 3px 0 3px;
+  background-color: var(--color-text-primary);
 }
 
 .numero-box {
@@ -185,7 +205,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s ease;
-  font-size: 0.9rem;
+  font-size: var(--font-size-small);
 }
 
 .numero-box:hover {
@@ -193,28 +213,26 @@
 }
 
 .numero-box.disponible {
-  background-color: var(--color-gold-dark);
-  color: var(--color-black);
+  background-color: white;
 }
 
 .numero-box.seleccionado {
-  background-color: var(--color-gold);
-  color: var(--color-dark-bg);
+  background-color: var(--color-accent-hover);
 }
 
 .numero-box.vendido {
-  background-color: var(--color-gray);
-  color: var(--color-white);
+  background-color: var(--color-text-primary);
+  color: var(--color-text-shadow);
   cursor: not-allowed;
 }
 
-/* Mensaje de bloqueo */
+/* 🚫 Mensaje de bloqueo */
 .mensaje-bloqueo {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: var(--color-accent-hover);
+  color: var(--color-text-shadow);
   padding: 1rem;
   margin: 1rem auto;
-  border: 1px solid #ffeeba;
+  border: 1px solid var(--color-text-shadow);
   border-radius: 6px;
   text-align: center;
   font-weight: 500;
@@ -222,7 +240,7 @@
   box-shadow: 0 0 6px rgba(0,0,0,0.1);
 }
 
-/* Responsive */
+/* 📱 Responsive */
 @media (max-width: 768px) {
   .numero-grid-container {
     padding: 1.5rem;
@@ -243,6 +261,6 @@
   }
 
   .numero-porcentaje-lineal {
-    font-size: 0.85rem;
+    font-size: var(--font-size-small);
   }
 }

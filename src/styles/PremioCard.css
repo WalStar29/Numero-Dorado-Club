@@ -1,74 +1,44 @@
 :root {
-  --color-white: #ffffff;
-  --color-gold: #FFD700;
-  --color-gold-dark: #c18200;
-  --color-black: #000000;
-  --color-dark-bg: #0F0F0F;
-  --color-light-text: #F5F5F5;
+  /* 🎨 Colores base y de acento */
+  --color-bg-primary: #ffdd00;
+  --color-accent: #ffcd0d;
+  --color-accent-hover: #ffdf2c;
+
+  /* 🖋️ Colores de texto y contraste */
+  --color-text-primary: #c9c9c9;
+  --color-text-shadow: #000000;
+
+  /* 🔠 Tipografía */
+  --font-size-base: 0.95rem;
+  --font-size-small: 0.85rem;
 }
 
-/* Contenedor principal del carrusel */
+/* 🍀 Trébol decorativo */
+.premio-card img[src$="trebol.svg"] {
+  display: block;
+  margin: 0 auto 1rem auto;
+  width: 48px;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.premio-card img[src$="trebol.svg"]:hover {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+/* 🎯 Contenedor principal del carrusel */
 .carrusel-premios {
   position: relative;
   max-width: 600px;
   margin: 2rem auto;
-  padding: 1rem;
 }
 
-/* Flechas de navegación */
-.flechas {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.flechas button {
-  background-color: var(--color-gold-dark);
-  color: var(--color-white);
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.flechas button:hover {
-  background-color: var(--color-gold);
-}
-
-.flechas span {
-  font-weight: 600;
-  color: var(--color-black);
-}
-
-/* Indicadores visuales del carrusel */
-.indicadores {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.indicadores span {
-  font-size: 1.2rem;
-  color: var(--color-gold-dark);
-  opacity: 0.4;
-  transition: opacity 0.3s ease;
-}
-
-.indicadores .activo {
-  opacity: 1;
-}
-
-/* Animación de transición entre premios */
+/* 🃏 Tarjeta de premio */
 .premio-card {
   position: relative;
-  background-color: var(--color-white);
-  color: var(--color-light-text);
+  background-color: #fff;
+  color: var(--color-text-primary);
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -84,15 +54,17 @@
   opacity: 1;
 }
 
-@keyframes fadeLoop {
-  0% { opacity: 1; }
-  50% { opacity: 0.2; }
-  100% { opacity: 1; }
+@keyframes scaleLoop {
+  0%   { transform: scale(0.9); }
+  50%  { transform: scale(1.03); }
+  100% { transform: scale(0.9); }
 }
 
+
+/* 🏷️ Badge dorado */
 .badge-premio {
   margin-bottom: 2rem;
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
   font-weight: 700;
   padding: 0.4rem 0.8rem;
   border-radius: 8px;
@@ -100,13 +72,16 @@
 }
 
 .badge-premio span {
-  background-color: var(--color-gold-dark);
+  background-color: var(--color-accent);
   padding: 0.2rem 0.6rem;
   border-radius: 10px;
-  color: var(--color-white);
-  animation: fadeLoop 2.5s ease-in-out infinite;
+  color: white;
+  animation: scaleLoop 2.5s ease-in-out infinite;
+  transform-origin: center;
+  display: inline-block; /* ← CRÍTICO para que transform funcione */
 }
 
+/* 🖼️ Imagen del premio */
 .premio-imagen {
   width: 100%;
   max-height: 300px;
@@ -115,46 +90,81 @@
   margin-bottom: 1rem;
 }
 
+/* 🧭 Flechas de navegación */
+.flechas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.flechas button {
+  background-color: var(--color-accent);
+  color: var(--color-text-shadow);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.flechas button:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.flechas span {
+  font-weight: 600;
+  color: var(--color-text-shadow);
+}
+
+/* 🏆 Nombre del premio */
 .premio-nombre {
   font-size: 1.8rem;
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
   margin-bottom: 0.5rem;
 }
 
+/* 📝 Descripción */
 .premio-descripcion {
   margin-bottom: 0.5rem;
-  color: var(--color-black);
+  color: var(--color-text-shadow);
   font-weight: 600;
 }
 
+/* 💰 Valor del premio */
 .premio-valor {
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
 }
 
+/* 📊 Info adicional */
 .premio-info {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   font-weight: 600;
   margin-bottom: 1.5rem;
-  color: var(--color-dark-bg);
+  color: var(--color-text-shadow);
 }
 
+/* ⏳ Contador */
 .contador {
-  border: solid 1px var(--color-gold-dark);
+  border: solid 1px var(--color-accent);
   padding: 0 0 1rem 0;
   border-radius: 10px;
 }
 
 .contador-label {
-  font-size: 1.0rem;
+  font-size: var(--font-size-base);
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: var(--color-black);
+  color: var(--color-text-shadow);
 }
 
 .contador-numeros {
@@ -164,7 +174,7 @@
 }
 
 .contador-numeros div {
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
   padding: 0.6rem 0.8rem;
   border-radius: 8px;
   min-width: 60px;
@@ -177,19 +187,20 @@
 }
 
 .contador-numeros label {
-  font-size: 0.8rem;
+  font-size: var(--font-size-small);
   display: block;
   margin-top: 4px;
   font-weight: 600;
-  color: var(--color-black);
+  color: var(--color-text-shadow);
 }
 
+/* 📣 Texto promocional */
 .promo-text {
   margin-top: 2rem;
-  font-size: 1rem;
-  color: var(--color-black);
-  border: solid 1px var(--color-gold-dark);
-  background-color: var(--color-white);
+  font-size: var(--font-size-base);
+  color: var(--color-text-shadow);
+  border: solid 1px var(--color-accent);
+  background-color: #fff;
   padding: 1rem;
   border-radius: 10px;
   font-weight: 400;
@@ -197,10 +208,10 @@
 
 .promo-text span {
   font-weight: 500;
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
 }
 
-/* Responsivo */
+/* 📱 Responsivo */
 @media (max-width: 768px) {
   .premio-card {
     padding: 1.5rem;
@@ -212,7 +223,7 @@
 
   .premio-descripcion,
   .premio-info {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
   }
 
   .premio-valor {
@@ -226,5 +237,10 @@
 
   .contador-numeros span {
     font-size: 1.2rem;
+  }
+
+  .premio-card img[src$="trebol.svg"] {
+    width: 40px;
+    margin-bottom: 0.5rem;
   }
 }

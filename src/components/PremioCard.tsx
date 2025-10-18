@@ -76,6 +76,7 @@ export default function CarruselPremios() {
     return (
         <div className="carrusel-premios">
         <div className="premio-card">
+            <img src="/trebol.svg" alt="" />
             <div className="badge-premio">Premio Principal <span>¡ACTIVA!</span></div>
 
             <Image

@@ -15,27 +15,26 @@ export default function Navbar() {
 
     return (
         <nav className="navbar">
-        <div className="navbar-container">
-            <div className="navbar-logo">
-            <img src="/logo.png" alt="Logo Número Dorado Club" className="logo-img" />
-            <span>NUMERO DORADO CLUB</span>
+            <div className="navbar-container">
+                <div className="navbar-logo">
+                    <img src="/loaders.svg" alt="Logo Número Dorado Club" className="logo-img" />
+                </div>
+
+                {/* Ícono hamburguesa */}
+                <button className="navbar-menu-icon" onClick={() => setMenuAbierto(true)}>
+                <FaBars />
+                </button>
             </div>
 
-            {/* Ícono hamburguesa */}
-            <button className="navbar-menu-icon" onClick={() => setMenuAbierto(true)}>
-            <FaBars />
-            </button>
-        </div>
+            {/* Menú lateral móvil */}
+            <div className={`navbar-sidebar ${menuAbierto ? 'activo' : ''}`}>
+                <button className="navbar-close-icon" onClick={() => setMenuAbierto(false)}>
+                <FaTimes />
+                </button>
+            </div>
 
-        {/* Menú lateral móvil */}
-        <div className={`navbar-sidebar ${menuAbierto ? 'activo' : ''}`}>
-            <button className="navbar-close-icon" onClick={() => setMenuAbierto(false)}>
-            <FaTimes />
-            </button>
-        </div>
-
-        {/* Fondo oscuro sin interacción */}
-        {menuAbierto && <div className="navbar-overlay" />}
+            {/* Fondo oscuro sin interacción */}
+            {menuAbierto && <div className="navbar-overlay" />}
         </nav>
     )
 }

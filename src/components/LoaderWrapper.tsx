@@ -22,7 +22,7 @@ export default function LoaderWrapper({ children }: { children: React.ReactNode 
             left: 0,
             width: '100vw',
             height: '100vh',
-            background: 'linear-gradient(135deg, #fff8e1, #ffe082)',
+            background: '#ffffffff',
             zIndex: 9999,
             display: 'flex',
             flexDirection: 'column',
@@ -34,10 +34,10 @@ export default function LoaderWrapper({ children }: { children: React.ReactNode 
             transition: 'opacity 0.3s ease-in-out'
             }}>
             <Image
-                src="/logo.png"
+                src="/loaders.svg"
                 alt="Logo Numero Dorado Club"
-                width={80}
-                height={80}
+                width={100}
+                height={100}
                 style={{
                 marginBottom: '20px',
                 borderRadius: '16px',
@@ -48,8 +48,8 @@ export default function LoaderWrapper({ children }: { children: React.ReactNode 
             <div style={{
                 width: '70px',
                 height: '70px',
-                border: '6px solid #ffe0b2',
-                borderTop: '6px solid #ff9800',
+                border: '6px solid #ffdd00',
+                borderTop: '6px solid #c9c9c9',
                 borderRadius: '50%',
                 animation: 'spin 0.8s linear infinite',
                 marginBottom: '20px'
@@ -57,9 +57,11 @@ export default function LoaderWrapper({ children }: { children: React.ReactNode 
             <div style={{
                 fontSize: '1.1rem',
                 fontWeight: 500,
-                textAlign: 'center'
-            }}>
-                Cargando tu número ganador…
+                textAlign: 'center',
+                color: '#ffdf2c',
+                textShadow: '0 0 10px rgba(0, 0, 0)',
+                }}>
+                Cargando tu número dorado…
             </div>
             <style>{`
                 @keyframes spin {

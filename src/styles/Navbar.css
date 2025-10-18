@@ -1,25 +1,28 @@
 :root {
-  --color-white: #ffffff;
-  --color-gold: #FFD700;
-  --color-gold-dark: #c18200;
-  --color-black: #000000;
-  --color-shadow: rgba(0, 0, 0, 0.5);
+  /* 🎨 Colores base y de acento */
+  --color-bg-primary: #ffdd00;       /* Fondo principal dorado claro */
+  --color-accent: #ffcd0d;           /* Acento dorado medio */
+  --color-accent-hover: #ffdf2c;     /* Acento dorado más claro para hover o foco */
+  /* 🖋️ Colores de texto y contraste */
+  --color-text-primary: #c9c9c9;     /* Texto principal gris claro */
+  --color-text-shadow: #000000;      /* Sombra suave para texto o elementos elevados */
+  /* 🔠 Tipografía */
   --font-size-base: 0.95rem;
   --font-size-small: 0.85rem;
 }
 
-/* Navbar principal */
+/* 📌 Navbar principal */
 .navbar {
-  background-color: var(--color-white);
+  background-color:#ffffff;
   padding: 0.8rem 1.5rem;
-  box-shadow: 0 0 12px var(--color-shadow);
+  box-shadow: 0px 0px 20px -5px var(--color-text-shadow);
   position: sticky;
   top: 0;
   z-index: 100;
   font-size: var(--font-size-base);
 }
 
-/* Contenedor interno */
+/* 🧱 Contenedor interno */
 .navbar-container {
   display: flex;
   justify-content: space-between;
@@ -28,14 +31,14 @@
   margin: 0 auto;
 }
 
-/* Logo */
+/* 🪙 Logo */
 .navbar-logo {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--color-gold-dark);
+  color: var(--color-accent-hover);
 }
 
 .logo-img {
@@ -45,42 +48,17 @@
   object-fit: contain;
 }
 
-/* Botones desktop */
-.navbar-buttons {
-  display: flex;
-  gap: 0.8rem;
-}
-
-.navbar-button {
-  background-color: var(--color-gold);
-  color: var(--color-black);
-  border: none;
-  padding: 0.4rem 0.9rem;
-  border-radius: 5px;
-  font-weight: 600;
-  font-size: var(--font-size-small);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.navbar-button:hover {
-  background-color: var(--color-gold-dark);
-  color: var(--color-white);
-  transform: scale(1.04);
-}
-
-/* Ícono hamburguesa */
+/* 🍔 Ícono hamburguesa */
 .navbar-menu-icon {
   display: none;
   background: none;
   border: none;
   font-size: 1.4rem;
-  color: var(--color-gold-dark);
+  color: var(--color-text-shadow);
   cursor: pointer;
 }
 
-/* Menú lateral oculto */
+/* 📱 Menú lateral móvil */
 .navbar-sidebar {
   position: fixed;
   top: 0;
@@ -88,8 +66,8 @@
   width: 240px;
   max-width: 80vw;
   height: 100vh;
-  background-color: var(--color-white);
-  box-shadow: 2px 0 12px var(--color-shadow);
+  background-color: white;
+  box-shadow: 1px 0 10px var(--color-text-shadow);
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -104,37 +82,29 @@
   transform: translateX(0);
 }
 
-/* Ícono cerrar */
+/* ❌ Ícono cerrar */
 .navbar-close-icon {
   background: none;
   border: none;
   font-size: 1.3rem;
-  color: var(--color-gold-dark);
+  color: var(--color-text-shadow);
   align-self: flex-end;
   cursor: pointer;
 }
 
-/* Fondo oscuro */
+/* 🌒 Fondo oscuro */
 .navbar-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
   z-index: 150;
 }
 
-/* Visibilidad por dispositivo */
-.desktop-only {
-  display: flex;
-}
-
+/* 🖥️ Responsividad */
 @media (max-width: 768px) {
-  .desktop-only {
-    display: none;
-  }
-
   .navbar-menu-icon {
     display: block;
   }
@@ -145,11 +115,6 @@
 
   .logo-img {
     height: 28px;
-  }
-
-  .navbar-button {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
   }
 
   .navbar-sidebar {

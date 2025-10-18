@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-
 import Navbar from '@/components/Navbar'
 import ResumenCompra from '@/components/ResumenCompra'
 import '@/styles/Checkout.css'
@@ -36,12 +35,6 @@ export default function Page() {
 
   const renderDato = (label: string, valor: string) =>
     valor.trim() !== '' ? <p><strong>{label}:</strong> {valor}</p> : null
-
-  const copiarTexto = (texto: string) => {
-    navigator.clipboard.writeText(texto)
-    setCopiado(texto)
-    setTimeout(() => setCopiado(null), 2000)
-  }
 
   useEffect(() => {
     const guardados = localStorage.getItem('carritoNumeros')
@@ -195,7 +188,7 @@ export default function Page() {
         </div>
 
         <div className="metodo-pago" style={{ marginTop: '2rem' }}>
-          <h4 className="titulo-dorado"><FaCreditCard /> Método de Pago</h4>
+          <h3 className="titulo-dorado"><FaCreditCard /> Método de Pago</h3>
           <div className="opciones-pago">
             <button className={metodoActivo('binance')} onClick={() => setMetodoPago('binance')}>
               <SiBinance /> Binance Pay<br /><small>Popular · USDT</small>
@@ -229,14 +222,6 @@ export default function Page() {
               {renderDato('Titular', 'Juan Pérez')}
               <p>
                 <strong>Monto a pagar:</strong> Bs {totalBs.toFixed(2)}
-                <button
-                  className="btn-copiar"
-                  onClick={() => copiarTexto(totalBs.toFixed(2))}
-                  title="Copiar solo el monto"
-                >
-                  <FaRegCopy />
-                </button>
-                {copiado === totalBs.toFixed(2) && <span className="copiado-msg">Copiado ✅</span>}
               </p>
               <h5>Importante:</h5>
               <ul>
@@ -251,7 +236,6 @@ export default function Page() {
 
         <div className="referencia-pago" style={{ marginTop: '2rem' }}>
           <h4 className="titulo-dorado">Número de Operación</h4>
-
           <div className="campo-banco-operacion">
             <label htmlFor="bancoOperacion" className="label-referencia">
               Banco con el que realizaste la operación <span className="requerido">*</span>
@@ -307,78 +291,76 @@ export default function Page() {
             </button>
 
             {mostrarModal && (
-  <div className="modal-overlay">
-    <div className="modal-contenido">
-      <button
-        className="btn-cerrar-x"
-        onClick={() => setMostrarModal(false)}
-        aria-label="Cerrar modal"
-      >
-        ✖
-      </button>
+              <div className="modal-overlay">
+                <div className="modal-contenido">
+                  <button
+                    className="btn-cerrar-x"
+                    onClick={() => setMostrarModal(false)}
+                    aria-label="Cerrar modal"
+                  >
+                    ✖
+                  </button>
 
-      <h3>✅ Confirmación de Compra</h3>
+                  <h3>✅ Confirmación de Compra</h3>
 
-      <section>
-        <h4>Números Seleccionados</h4>
-        <ul className="lista-numeros-modal">
-          {[...new Set(seleccionados)].map((num) => (
-            <li key={num}>#{num.toString().padStart(3, '0')}</li>
-          ))}
-        </ul>
-      </section>
+                  <section>
+                    <h4>Números Seleccionados</h4>
+                    <ul className="lista-numeros-modal">
+                      {[...new Set(seleccionados)].map((num) => (
+                        <li key={num}>#{num.toString().padStart(3, '0')}</li>
+                      ))}
+                    </ul>
+                  </section>
 
-      <section>
-        <h4>Información de Contacto</h4>
-        <p><strong>Nombre:</strong> {nombre}</p>
-        <p><strong>Apellido:</strong> {apellido}</p>
-        <p><strong>Correo Electrónico:</strong> {correo}</p>
-        <p><strong>Teléfono:</strong> {telefono}</p>
-      </section>
+                  <section>
+                    <h4>Información de Contacto</h4>
+                    <p><strong>Nombre:</strong> {nombre}</p>
+                    <p><strong>Apellido:</strong> {apellido}</p>
+                    <p><strong>Correo Electrónico:</strong> {correo}</p>
+                    <p><strong>Teléfono:</strong> {telefono}</p>
+                  </section>
 
-      <section>
-        <h4>Método de Pago</h4>
-        <p><strong>Seleccionado:</strong> {metodoPago === 'movil' ? 'Pago Móvil' : 'Binance Pay'}</p>
-        <p><strong>Monto:</strong> {
-          metodoPago === 'movil'
-            ? `Bs ${totalBs.toFixed(2)}`
-            : `$${total.toFixed(2)}`
-        }</p>
-      </section>
+                  <section>
+                    <h4>Método de Pago</h4>
+                    <p><strong>Seleccionado:</strong> {metodoPago === 'movil' ? 'Pago Móvil' : 'Binance Pay'}</p>
+                    <p><strong>Monto:</strong> {
+                      metodoPago === 'movil'
+                        ? `Bs ${totalBs.toFixed(2)}`
+                        : `$${total.toFixed(2)}`
+                    }</p>
+                  </section>
 
-      <section>
-        <h4>Referencia de Pago</h4>
-        <p><strong>Número de Operación:</strong> {referencia}</p>
-        {metodoPago === 'movil' && (
-          <p><strong>Banco utilizado:</strong> {bancoOperacion || 'No seleccionado'}</p>
-        )}
-      </section>
+                  <section>
+                    <h4>Referencia de Pago</h4>
+                    <p><strong>Número de Operación:</strong> {referencia}</p>
+                    {metodoPago === 'movil' && (
+                      <p><strong>Banco utilizado:</strong> {bancoOperacion || 'No seleccionado'}</p>
+                    )}
+                  </section>
 
-      <section>
-        <h4>Total de la Compra</h4>
-        <p><strong>Total en dólares:</strong> ${total.toFixed(2)}</p>
-        <p><strong>Total en bolívares:</strong> Bs {totalBs.toFixed(2)}</p>
-      </section>
+                  <section>
+                    <h4>Total de la Compra</h4>
+                    <p><strong>Total en dólares:</strong> ${total.toFixed(2)}</p>
+                    <p><strong>Total en bolívares:</strong> Bs {totalBs.toFixed(2)}</p>
+                  </section>
 
-      <section className="mensaje-confirmacion">
-        <p>
-          🛡️ <strong>Importante:</strong> Asegúrese de que todos los datos estén correctos. Esta información será utilizada para comunicarnos con usted y validar su participación en el sorteo del <strong>Número Dorado</strong>. ¡Mucha suerte! 🍀
-        </p>
-      </section>
+                  <section className="mensaje-confirmacion">
+                    <p>
+                      🛡️ <strong>Importante:</strong> Asegúrese de que todos los datos estén correctos. Esta información será utilizada para comunicarnos con usted y validar su participación en el sorteo del <strong>Número Dorado</strong>. ¡Mucha suerte! 🍀
+                    </p>
+                  </section>
 
-      <div className="modal-botones solo-enviar">
-        <button
-          className="btn-enviar-modal"
-          onClick={handleEnviarWhatsApp}
-        >
-          Enviar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
+                  <div className="modal-botones solo-enviar">
+                    <button
+                      className="btn-enviar-modal"
+                      onClick={handleEnviarWhatsApp}
+                    >
+                      Enviar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
     </div>
   )

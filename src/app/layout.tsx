@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/trebol.svg" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Participa por el iPhone 15 Pro Max en el sorteo más confiable de Venezuela." />

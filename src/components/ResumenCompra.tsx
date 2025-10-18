@@ -32,6 +32,7 @@ if (seleccionados.length === 0) {
     return (
         <div className="form-compra">
             <div className="resumen-box">
+                <img src="/trebol.svg" alt="" />
                 <h3 className="titulo-dorado"><MdShoppingCartCheckout/>Resumen de Compra</h3>
                 <h4 className="subtitulo">Números seleccionados:</h4>
                 <ul className="lista-numeros">

@@ -1,51 +1,54 @@
 :root {
-  --color-white: #ffffff;
-  --color-gold: #FFD700;
-  --color-gold-dark: #c18200;
-  --color-black: #000000;
-  --color-dark-bg: #0F0F0F;
-  --color-light-text: #F5F5F5;
-  --color-gray: #808080;
-  --color-green: #00ff7f;
-  --color-red: #ff4c4c;
+  /* 🎨 Colores base y de acento */
+  --color-bg-primary: #ffdd00;
+  --color-accent: #ffcd0d;
+  --color-accent-hover: #ffdf2c;
+
+  /* 🖋️ Colores de texto y contraste */
+  --color-text-primary: #c9c9c9;
+  --color-text-shadow: #000000;
+
+  /* 🔠 Tipografía */
+  --font-size-base: 0.95rem;
+  --font-size-small: 0.85rem;
 }
 
 .checkout-sidebar {
-  background-color: var(--color-white);
-  color: #f5f5f5;
+  background-color: white;
+  color: var(--color-text-primary);
   padding: 1.5rem;
   margin-top: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.lineal{
-    display: flex;
-    justify-content: space-between;
+.lineal {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Título y cantidad */
 .checkout-titulo {
   font-size: 1.4rem;
   margin-bottom: 0.5rem;
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
 }
 
 .checkout-cantidad {
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   margin-bottom: 1rem;
-  background-color: var(--color-gold-dark);
+  background-color: var(--color-text-primary);
   display: inline-block;
   font-weight: 600;
   padding: 0.2rem 0.6rem;
   border-radius: 10px;
-  color: var(--color-white);
+  color: var(--color-text-shadow);
 }
 
 /* Mensaje si está vacío */
 .checkout-vacio {
   font-style: italic;
-  color: var(--color-gray);
+  color: var(--color-text-primary);
 }
 
 /* Lista de números */
@@ -53,25 +56,20 @@
   list-style: none;
   padding: 0;
   margin: 0 0 1rem 0;
-  border-bottom: solid 1px var(--color-black);
+  border-bottom: solid 1px var(--color-text-shadow);
 }
 
 .checkout-item {
   display: flex;
   justify-content: space-between;
-  background-color: var(--color-white);
-  color: var(--color-black);
+  color: var(--color-text-shadow);
   padding: 0.5rem 0.75rem;
   margin-bottom: 0.5rem;
   border-radius: 6px;
 }
 
-.checkout-numero {
-  font-weight: 600;
-}
-
+.checkout-numero,
 .checkout-precio {
-  color: var(--color-black);
   font-weight: 600;
 }
 
@@ -84,9 +82,9 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.3rem;
-  font-size: 0.95rem;
+  font-size: var(--font-size-base);
   font-weight: 600;
-  color: var(--color-black);
+  color: var(--color-text-shadow);
 }
 
 /* Botones */
@@ -98,8 +96,8 @@
 }
 
 .btn-pagar {
-  background-color: var(--color-gold-dark);
-  color: var(--color-white);
+  background-color: var(--color-accent);
+  color: var(--color-text-shadow);
   border: none;
   padding: 0.6rem;
   border-radius: 8px;
@@ -109,13 +107,13 @@
 }
 
 .btn-pagar:hover {
-  background-color: #e6c200;
+  background-color: var(--color-accent-hover);
 }
 
 .btn-limpiar {
   background-color: transparent;
-  color: #ff4c4c;
-  border: 1px solid #ff4c4c;
+  color: var(--color-text-shadow);
+  border: 2px solid var(--color-text-shadow);
   padding: 0.6rem;
   border-radius: 8px;
   font-weight: bold;
@@ -123,22 +121,17 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-limpiar:hover {
-  background-color: #ff4c4c;
-  color: #fff;
-}
-
 /* Mensaje de login */
 .checkout-login-msg {
-  font-size: 0.85rem;
-  color: #ff4c4c;
+  font-size: var(--font-size-small);
+  color: var(--color-accent-hover);
   font-style: italic;
 }
 
 .btn-eliminar {
   background: none;
   border: none;
-  color: #ff4c4c;
+  color: var(--color-text-shadow);
   font-size: 1.1rem;
   cursor: pointer;
   margin-left: 0.5rem;
@@ -148,7 +141,6 @@
 .btn-eliminar:hover {
   transform: scale(1.2);
 }
-
 
 /* Responsivo para móviles */
 @media (max-width: 768px) {
@@ -162,20 +154,20 @@
   }
 
   .checkout-cantidad {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
   }
 
   .checkout-item {
-    font-size: 0.95rem;
+    font-size: var(--font-size-base);
   }
 
   .btn-pagar,
   .btn-limpiar {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
     padding: 0.5rem;
   }
 
   .checkout-login-msg {
-    font-size: 0.8rem;
+    font-size: var(--font-size-small);
   }
 }
