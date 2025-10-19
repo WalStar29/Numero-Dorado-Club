@@ -15,7 +15,7 @@
 .navbar {
   background-color:#ffffff;
   padding: 0.8rem 1.5rem;
-  box-shadow: 0px 0px 20px -5px var(--color-text-shadow);
+  box-shadow: 0px 0px 15px -10px var(--color-text-shadow);
   position: sticky;
   top: 0;
   z-index: 100;

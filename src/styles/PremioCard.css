@@ -104,9 +104,8 @@
   color: var(--color-text-shadow);
   border: none;
   padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  font-size: 1.5rem;
-  font-weight: bold;
+  border-radius: 8px;;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -148,7 +147,6 @@
   justify-content: center;
   gap: 0.5rem;
   font-size: var(--font-size-base);
-  font-weight: 600;
   margin-bottom: 1.5rem;
   color: var(--color-text-shadow);
 }

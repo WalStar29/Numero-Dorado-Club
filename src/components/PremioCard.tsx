@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import '@/styles/PremioCard.css'
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 
 type Premio = {
     id: number
@@ -89,9 +90,9 @@ export default function CarruselPremios() {
             />
 
             <div className="flechas">
-            <button onClick={handlePrev}>←</button>
-            <span>Premio {premio.id} de 3</span>
-            <button onClick={handleNext}>→</button>
+                <button onClick={handlePrev}><FaArrowLeft/></button>
+                    <span>Premio {premio.id} de 3</span>
+                <button onClick={handleNext}><FaArrowRight/></button>
             </div>
 
             <h2 className="premio-nombre">{premio.nombre}</h2>
