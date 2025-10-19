@@ -54,15 +54,6 @@ export default function LoaderWrapper({ children }: { children: React.ReactNode 
                 animation: 'spin 0.8s linear infinite',
                 marginBottom: '20px'
             }} />
-            <div style={{
-                fontSize: '1.1rem',
-                fontWeight: 500,
-                textAlign: 'center',
-                color: '#ffdf2c',
-                textShadow: '0 0 10px rgba(0, 0, 0)',
-                }}>
-                Cargando tu número dorado…
-            </div>
             <style>{`
                 @keyframes spin {
                 to {

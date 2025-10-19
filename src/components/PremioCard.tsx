@@ -10,15 +10,15 @@ type Premio = {
     descripcion: string
     valor: string
     imagen: string
-}
+    }
 
-const premios: Premio[] = [
+    const premios: Premio[] = [
     {
         id: 1,
-        nombre: 'iPhone 15 Pro Max',
-        descripcion: '256GB – Titanio Natural',
+        nombre: 'Moto sbr 2026 0km',
+        descripcion: 'Gris mate',
         valor: '$1,200',
-        imagen: '/iphone.jpg',
+        imagen: '/moto.png',
     },
     {
         id: 2,
@@ -30,20 +30,20 @@ const premios: Premio[] = [
     {
         id: 3,
         nombre: 'Moto Honda',
-        descripcion: 'Estilo Unico',
+        descripcion: 'Estilo Único',
         valor: '$1,100',
-        imagen: '/moto.jpg',
+        imagen: '/iphone.jpg', // ← corregido: sin espacio
     },
-]
+    ]
 
-type TimeLeft = {
+    type TimeLeft = {
     days: number
     hours: number
     minutes: number
     seconds: number
-}
+    }
 
-export default function CarruselPremios() {
+    export default function CarruselPremios() {
     const [index, setIndex] = useState(0)
     const [timeLeft, setTimeLeft] = useState<TimeLeft>({
         days: 0,
@@ -71,28 +71,36 @@ export default function CarruselPremios() {
         return () => clearInterval(interval)
     }, [])
 
-    const handlePrev = () => setIndex((prev) => (prev === 0 ? premios.length - 1 : prev - 1))
-    const handleNext = () => setIndex((prev) => (prev === premios.length - 1 ? 0 : prev + 1))
+    const handlePrev = () =>
+        setIndex((prev) => (prev === 0 ? premios.length - 1 : prev - 1))
+    const handleNext = () =>
+        setIndex((prev) => (prev === premios.length - 1 ? 0 : prev + 1))
 
     return (
         <div className="carrusel-premios">
         <div className="premio-card">
             <img src="/trebol.svg" alt="" />
-            <div className="badge-premio">Premio Principal <span>¡ACTIVA!</span></div>
+            <div className="badge-premio">
+            Premio Principal <span>¡ACTIVA!</span>
+            </div>
 
             <Image
-            src={premio.imagen}
+            src={premio.imagen.trim()} // ← blindaje contra espacios
             alt={premio.nombre}
-            width={400}
+            width={300}
             height={300}
             className="premio-imagen"
             priority
             />
 
             <div className="flechas">
-                <button onClick={handlePrev}><FaArrowLeft/></button>
-                    <span>Premio {premio.id} de 3</span>
-                <button onClick={handleNext}><FaArrowRight/></button>
+            <button onClick={handlePrev}>
+                <FaArrowLeft />
+            </button>
+            <span>Premio {premio.id} de {premios.length}</span>
+            <button onClick={handleNext}>
+                <FaArrowRight />
+            </button>
             </div>
 
             <h2 className="premio-nombre">{premio.nombre}</h2>
