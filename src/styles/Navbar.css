@@ -126,3 +126,44 @@
     font-size: 1.2rem;
   }
 }
+
+
+
+.navbar-social-section {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.navbar-social-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--gold-dark);
+  margin-bottom: 1rem;
+}
+
+.navbar-icon-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--black);
+  transition: transform 0.3s ease;
+}
+
+.navbar-icon-item:hover {
+  transform: scale(1.05);
+  color: var(--gold-dark);
+}
+
+.navbar-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.5rem;
+}
