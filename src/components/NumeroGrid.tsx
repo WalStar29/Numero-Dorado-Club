@@ -5,6 +5,7 @@ import { db } from '@/firebase/firebase'
 import '@/styles/NumeroGrid.css'
 
 const TOTAL_NUMEROS = 9999
+const TIEMPO_EXPIRACION = 30 * 60 * 1000 // 30 minutos en milisegundos
 
 type NumeroGridProps = {
   seleccionados: number[]
@@ -70,7 +71,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
 
       const expirados = snapshot.docs.filter(doc => {
         const data = doc.data()
-        return data.estado === 'reservado' && data.timestamp && ahora - data.timestamp > 10 * 60 * 1000
+        return data.estado === 'reservado' && data.timestamp && ahora - data.timestamp > TIEMPO_EXPIRACION
       })
 
       for (const docExp of expirados) {
@@ -105,7 +106,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
       const reservadoPor = data?.reservadoPor
       const timestamp = data?.timestamp
       const ahora = Date.now()
-      const expirado = timestamp && ahora - timestamp > 10 * 60 * 1000
+      const expirado = timestamp && ahora - timestamp > TIEMPO_EXPIRACION
 
       if (estadoActual === 'vendido') {
         setMensajeBloqueo(`❌ El número #${id} ya fue vendido.`)
@@ -169,6 +170,22 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
 
     if (resultado === 'reservado') {
       setSeleccionados(prev => [...prev, num])
+
+      // ⏳ Liberar automáticamente después de 30 minutos si no se ha comprado
+      setTimeout(async () => {
+        const ref = doc(db, 'estadoNumeros', num.toString().padStart(4, '0'))
+        const snapshot = await getDoc(ref)
+        const data = snapshot.data()
+
+        if (data?.estado === 'reservado' && data?.reservadoPor === sessionId) {
+          await updateDoc(ref, {
+            estado: 'disponible',
+            reservadoPor: null,
+            timestamp: null
+          })
+          setSeleccionados(prev => prev.filter(n => n !== num))
+        }
+      }, TIEMPO_EXPIRACION)
     }
 
     if (resultado === 'desmarcado') {
@@ -195,7 +212,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
       const randomIndex = Math.floor(Math.random() * restantes.length)
       const candidato = restantes[randomIndex]
       if (!seleccionadosAleatorios.includes(candidato)) {
-        await handleSelect(candidato) // ← usa la lógica completa
+        await handleSelect(candidato)
         seleccionadosAleatorios.push(candidato)
       }
     }
@@ -222,7 +239,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         </div>
         <div className="numero-porcentaje-lineal">
           <span className="porcentaje-texto">Progreso de venta:</span>
-          <span className="porcentaje-valor">{porcentajeVendidos}%</span>
+                    <span className="porcentaje-valor">{porcentajeVendidos}%</span>
           <div className="porcentaje-barra">
             <div
               className="porcentaje-barra-fill"
@@ -251,21 +268,18 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         </div>
       </div>
 
-      {/* Leyenda visual para el usuario */}
       <div className="numero-leyenda">
         <div className="leyenda-item disponible">Disponible</div>
         <div className="leyenda-item seleccionado">Seleccionado</div>
         <div className="leyenda-item vendido">Vendido</div>
       </div>
 
-      {/* Mensaje de bloqueo temporal */}
       {mensajeBloqueo && (
         <div className="mensaje-bloqueo">
           {mensajeBloqueo}
         </div>
       )}
 
-      {/* Renderizado del grid */}
       <div className="numero-grid">
         {numerosFiltrados.map((num) => {
           const isSeleccionado = seleccionados.includes(num.id)
