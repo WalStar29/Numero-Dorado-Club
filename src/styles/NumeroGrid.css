@@ -195,7 +195,7 @@ img[src$="trebol.svg"]:hover {
   overflow-y: auto;
   border-radius: 8px;
   padding: 2px 3px 0 3px;
-  background-color: var(--color-text-primary);
+  background-color: rgb(237, 236, 236);
 }
 
 .numero-box {
@@ -213,11 +213,11 @@ img[src$="trebol.svg"]:hover {
 }
 
 .numero-box.disponible {
-  background-color: white;
+  background-color: var(--color-accent-hover);
 }
 
 .numero-box.seleccionado {
-  background-color: var(--color-accent-hover);
+  background-color: white;
 }
 
 .numero-box.vendido {
