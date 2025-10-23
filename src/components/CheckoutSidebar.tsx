@@ -1,7 +1,6 @@
 'use client'
 import { FaTrash } from 'react-icons/fa'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
 import '@/styles/CheckoutSidebar.css'
 
 type CheckoutSidebarProps = {
@@ -9,12 +8,6 @@ type CheckoutSidebarProps = {
   onRemove: (num: number) => void
   onRemoveAll: () => void
 }
-
-type Expiracion = {
-  [num: number]: number // timestamp de expiración
-}
-
-const TIEMPO_EXPIRACION = 30 * 60 * 1000 // 30 minutos
 
 export default function CheckoutSidebar({
   seleccionados,
@@ -24,47 +17,6 @@ export default function CheckoutSidebar({
   const router = useRouter()
   const precioPorNumero = 1.0
   const total = seleccionados.length * precioPorNumero
-
-  const [expiraciones, setExpiraciones] = useState<Expiracion>({})
-  const [tiemposRestantes, setTiemposRestantes] = useState<{ [num: number]: string }>({})
-
-  useEffect(() => {
-    const ahora = Date.now()
-    const nuevasExpiraciones: Expiracion = {}
-
-    seleccionados.forEach(num => {
-      if (!expiraciones[num]) {
-        nuevasExpiraciones[num] = ahora + TIEMPO_EXPIRACION
-      } else {
-        nuevasExpiraciones[num] = expiraciones[num]
-      }
-    })
-
-    setExpiraciones(nuevasExpiraciones)
-  }, [seleccionados])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const ahora = Date.now()
-      const nuevosTiempos: { [num: number]: string } = {}
-
-      Object.entries(expiraciones).forEach(([numStr, exp]) => {
-        const num = parseInt(numStr)
-        const restante = exp - ahora
-        if (restante <= 0) {
-          nuevosTiempos[num] = 'Expirado'
-        } else {
-          const minutos = Math.floor(restante / 60000)
-          const segundos = Math.floor((restante % 60000) / 1000)
-          nuevosTiempos[num] = `${minutos}m ${segundos}s`
-        }
-      })
-
-      setTiemposRestantes(nuevosTiempos)
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [expiraciones])
 
   const handleCheckout = () => {
     if (seleccionados.length < 2) {
@@ -94,9 +46,6 @@ export default function CheckoutSidebar({
               <li key={num} className="checkout-item">
                 <span className="checkout-numero">#{num.toString().padStart(4, '0')}</span>
                 <span className="checkout-precio">${precioPorNumero.toFixed(2)}</span>
-                <span className="checkout-expira">
-                  ⏳ {tiemposRestantes[num] || '30m 0s'}
-                </span>
                 <button
                   className="btn-eliminar"
                   onClick={() => onRemove(num)}

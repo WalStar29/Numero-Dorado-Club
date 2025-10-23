@@ -5,7 +5,7 @@ import { db } from '@/firebase/firebase'
 import '@/styles/NumeroGrid.css'
 
 const TOTAL_NUMEROS = 9999
-const TIEMPO_EXPIRACION = 30 * 60 * 1000 // 30 minutos en milisegundos
+const TIEMPO_EXPIRACION = 30 * 60 * 1000 // 30 minutos
 
 type NumeroGridProps = {
   seleccionados: number[]
@@ -65,7 +65,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
   }, [])
 
   useEffect(() => {
-    const limpiarReservasExpiradas = async () => {
+    const interval = setInterval(async () => {
       const snapshot = await getDocs(collection(db, 'estadoNumeros'))
       const ahora = Date.now()
 
@@ -90,12 +90,12 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         .map(doc => parseInt(doc.id))
 
       setSeleccionados(seleccionadosActuales)
-    }
+    }, 60000)
 
-    limpiarReservasExpiradas()
+    return () => clearInterval(interval)
   }, [])
 
-  const reservarNumero = async (num: number) => {
+    const reservarNumero = async (num: number) => {
     const id = num.toString().padStart(4, '0')
     const ref = doc(db, 'estadoNumeros', id)
 
@@ -171,7 +171,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
     if (resultado === 'reservado') {
       setSeleccionados(prev => [...prev, num])
 
-      // ⏳ Liberar automáticamente después de 30 minutos si no se ha comprado
       setTimeout(async () => {
         const ref = doc(db, 'estadoNumeros', num.toString().padStart(4, '0'))
         const snapshot = await getDoc(ref)
@@ -239,7 +238,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         </div>
         <div className="numero-porcentaje-lineal">
           <span className="porcentaje-texto">Progreso de venta:</span>
-                    <span className="porcentaje-valor">{porcentajeVendidos}%</span>
+          <span className="porcentaje-valor">{porcentajeVendidos}%</span>
           <div className="porcentaje-barra">
             <div
               className="porcentaje-barra-fill"
@@ -258,7 +257,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
             onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
             className="numero-busqueda"
           />
-
           <button
             className="numero-aleatorio-btn"
             onClick={seleccionarDosAleatorios}
