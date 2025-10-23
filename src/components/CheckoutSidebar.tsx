@@ -28,22 +28,25 @@ export default function CheckoutSidebar({
     router.push('/checkout')
   }
 
+  // 🔒 Deduplicar antes de renderizar
+  const unicos = [...new Set(seleccionados)]
+
   return (
     <div className="checkout-sidebar">
       <div className="lineal">
         <h3 className="checkout-titulo">Tu Carrito</h3>
         <p className="checkout-cantidad">
-          {seleccionados.length} número{seleccionados.length !== 1 ? 's' : ''}
+          {unicos.length} número{unicos.length !== 1 ? 's' : ''}
         </p>
       </div>
 
-      {seleccionados.length === 0 ? (
+      {unicos.length === 0 ? (
         <p className="checkout-vacio">No has seleccionado ningún número.</p>
       ) : (
         <>
           <ul className="checkout-lista">
-            {seleccionados.map((num) => (
-              <li key={num} className="checkout-item">
+            {unicos.map((num) => (
+              <li key={`num-${num}`} className="checkout-item">
                 <span className="checkout-numero">#{num.toString().padStart(4, '0')}</span>
                 <span className="checkout-precio">${precioPorNumero.toFixed(2)}</span>
                 <button
@@ -60,7 +63,7 @@ export default function CheckoutSidebar({
           <div className="checkout-resumen">
             <div className="checkout-linea">
               <span>Subtotal:</span>
-              <span>${total.toFixed(2)}</span>
+              <span>${(unicos.length * precioPorNumero).toFixed(2)}</span>
             </div>
             <div className="checkout-linea">
               <span>Precio por número:</span>

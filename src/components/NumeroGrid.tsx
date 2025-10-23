@@ -1,11 +1,18 @@
 'use client'
 import { useState, useEffect, ChangeEvent } from 'react'
-import { collection, onSnapshot, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
+import {
+  collection,
+  onSnapshot,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  Timestamp
+} from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
 import '@/styles/NumeroGrid.css'
 
 const TOTAL_NUMEROS = 9999
-const TIEMPO_EXPIRACION = 30 * 60 * 1000 // 30 minutos
 
 type NumeroGridProps = {
   seleccionados: number[]
@@ -23,6 +30,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
   const [todos, setTodos] = useState<Numero[]>([])
   const [bloqueados, setBloqueados] = useState<Numero[]>([])
   const [mensajeBloqueo, setMensajeBloqueo] = useState<string | null>(null)
+  const [sessionId, setSessionId] = useState<string>('')
 
   const generarUUID = () =>
     'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -31,15 +39,20 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
       return v.toString(16)
     })
 
-  const sessionId = typeof window !== 'undefined'
-    ? localStorage.getItem('sessionId') || (() => {
-        const id = generarUUID()
-        localStorage.setItem('sessionId', id)
-        return id
-      })()
-    : ''
+  useEffect(() => {
+    const stored = localStorage.getItem('sessionId')
+    if (stored) {
+      setSessionId(stored)
+    } else {
+      const nuevo = generarUUID()
+      localStorage.setItem('sessionId', nuevo)
+      setSessionId(nuevo)
+    }
+  }, [])
 
   useEffect(() => {
+    if (!sessionId) return
+
     const unsubscribe = onSnapshot(collection(db, 'estadoNumeros'), (snapshot) => {
       const todosRaw = snapshot.docs.map(doc => {
         const data = doc.data()
@@ -57,46 +70,17 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         (b.estado === 'reservado' && !!b.reservadoPor && b.reservadoPor !== sessionId)
       )
 
+      const seleccionadosActuales = todosUnicos
+        .filter(n => n.estado === 'reservado' && n.reservadoPor === sessionId)
+        .map(n => n.id)
+
       setTodos(todosUnicos)
       setBloqueados(bloqueados)
+      setSeleccionados(seleccionadosActuales)
     })
 
     return () => unsubscribe()
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const snapshot = await getDocs(collection(db, 'estadoNumeros'))
-      const ahora = Date.now()
-
-      const expirados = snapshot.docs.filter(doc => {
-        const data = doc.data()
-        return data.estado === 'reservado' &&
-               data.timestamp &&
-               ahora - data.timestamp.toMillis() > TIEMPO_EXPIRACION
-      })
-
-      for (const docExp of expirados) {
-        await updateDoc(doc(db, 'estadoNumeros', docExp.id), {
-          estado: 'disponible',
-          reservadoPor: null,
-          timestamp: null
-        })
-      }
-
-      const seleccionadosActuales = snapshot.docs
-        .filter(doc => {
-          const data = doc.data()
-          return data.estado === 'reservado' && data.reservadoPor === sessionId
-        })
-        .map(doc => parseInt(doc.id))
-
-      setSeleccionados(seleccionadosActuales)
-    }, 60000)
-
-    return () => clearInterval(interval)
-  }, [])
-
+  }, [sessionId])
   const reservarNumero = async (num: number) => {
     const id = num.toString().padStart(4, '0')
     const ref = doc(db, 'estadoNumeros', id)
@@ -106,9 +90,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
       const data = snapshot.data()
       const estadoActual = data?.estado
       const reservadoPor = data?.reservadoPor
-      const timestamp = data?.timestamp
-      const ahora = Date.now()
-      const expirado = timestamp && ahora - timestamp.toMillis() > TIEMPO_EXPIRACION
 
       if (estadoActual === 'vendido') {
         setMensajeBloqueo(`❌ El número #${id} ya fue vendido.`)
@@ -116,21 +97,13 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         return false
       }
 
-      if (estadoActual === 'reservado' && reservadoPor !== sessionId && !expirado) {
+      if (estadoActual === 'reservado' && reservadoPor !== sessionId) {
         setMensajeBloqueo(`⚠️ El número #${id} está reservado por otro comprador.`)
         setTimeout(() => setMensajeBloqueo(null), 3000)
         return false
       }
 
-      if (estadoActual === 'reservado' && expirado) {
-        await updateDoc(ref, {
-          estado: 'disponible',
-          reservadoPor: null,
-          timestamp: null
-        })
-      }
-
-      if (estadoActual === 'reservado' && reservadoPor === sessionId && !expirado) {
+      if (estadoActual === 'reservado' && reservadoPor === sessionId) {
         await updateDoc(ref, {
           estado: 'disponible',
           reservadoPor: null,
@@ -143,7 +116,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         id,
         estado: 'reservado',
         reservadoPor: sessionId,
-        timestamp: new Date()
+        timestamp: Timestamp.now()
       }, { merge: true })
 
       return 'reservado'
@@ -172,21 +145,6 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
 
     if (resultado === 'reservado') {
       setSeleccionados(prev => [...prev, num])
-
-      setTimeout(async () => {
-        const ref = doc(db, 'estadoNumeros', num.toString().padStart(4, '0'))
-        const snapshot = await getDoc(ref)
-        const data = snapshot.data()
-
-        if (data?.estado === 'reservado' && data?.reservadoPor === sessionId) {
-          await updateDoc(ref, {
-            estado: 'disponible',
-            reservadoPor: null,
-            timestamp: null
-          })
-          setSeleccionados(prev => prev.filter(n => n !== num))
-        }
-      }, TIEMPO_EXPIRACION)
     }
 
     if (resultado === 'desmarcado') {
@@ -240,7 +198,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         </div>
         <div className="numero-porcentaje-lineal">
           <span className="porcentaje-texto">Progreso de venta:</span>
-                    <span className="porcentaje-valor">{porcentajeVendidos}%</span>
+          <span className="porcentaje-valor">{porcentajeVendidos}%</span>
           <div className="porcentaje-barra">
             <div
               className="porcentaje-barra-fill"
