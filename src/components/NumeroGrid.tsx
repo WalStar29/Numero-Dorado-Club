@@ -71,7 +71,9 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
 
       const expirados = snapshot.docs.filter(doc => {
         const data = doc.data()
-        return data.estado === 'reservado' && data.timestamp && ahora - data.timestamp > TIEMPO_EXPIRACION
+        return data.estado === 'reservado' &&
+               data.timestamp &&
+               ahora - data.timestamp.toMillis() > TIEMPO_EXPIRACION
       })
 
       for (const docExp of expirados) {
@@ -95,7 +97,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
     return () => clearInterval(interval)
   }, [])
 
-    const reservarNumero = async (num: number) => {
+  const reservarNumero = async (num: number) => {
     const id = num.toString().padStart(4, '0')
     const ref = doc(db, 'estadoNumeros', id)
 
@@ -106,7 +108,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
       const reservadoPor = data?.reservadoPor
       const timestamp = data?.timestamp
       const ahora = Date.now()
-      const expirado = timestamp && ahora - timestamp > TIEMPO_EXPIRACION
+      const expirado = timestamp && ahora - timestamp.toMillis() > TIEMPO_EXPIRACION
 
       if (estadoActual === 'vendido') {
         setMensajeBloqueo(`❌ El número #${id} ya fue vendido.`)
@@ -141,7 +143,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         id,
         estado: 'reservado',
         reservadoPor: sessionId,
-        timestamp: Date.now()
+        timestamp: new Date()
       }, { merge: true })
 
       return 'reservado'
@@ -238,7 +240,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         </div>
         <div className="numero-porcentaje-lineal">
           <span className="porcentaje-texto">Progreso de venta:</span>
-          <span className="porcentaje-valor">{porcentajeVendidos}%</span>
+                    <span className="porcentaje-valor">{porcentajeVendidos}%</span>
           <div className="porcentaje-barra">
             <div
               className="porcentaje-barra-fill"
