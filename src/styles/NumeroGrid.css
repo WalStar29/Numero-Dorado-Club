@@ -3,11 +3,9 @@
   --color-bg-primary: #ffdd00;
   --color-accent: #ffcd0d;
   --color-accent-hover: #ffdf2c;
-
   /* 🖋️ Colores de texto y contraste */
   --color-text-primary: #c9c9c9;
   --color-text-shadow: #000000;
-
   /* 🔠 Tipografía */
   --font-size-base: 0.95rem;
   --font-size-small: 0.85rem;
@@ -213,11 +211,11 @@ img[src$="trebol.svg"]:hover {
 }
 
 .numero-box.disponible {
-  background-color: var(--color-accent-hover);
+  background-color: white;
 }
 
 .numero-box.seleccionado {
-  background-color: white;
+  background-color: var(--color-accent-hover);
 }
 
 .numero-box.vendido {

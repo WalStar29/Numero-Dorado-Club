@@ -23,6 +23,7 @@ type Numero = {
   id: number
   estado: 'disponible' | 'reservado' | 'vendido'
   reservadoPor?: string
+  timestamp?: Timestamp
 }
 
 export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGridProps) {
@@ -59,7 +60,8 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         return {
           id: parseInt(doc.id),
           estado: data.estado,
-          reservadoPor: data.reservadoPor
+          reservadoPor: data.reservadoPor,
+          timestamp: data.timestamp
         }
       })
 
@@ -81,6 +83,42 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
 
     return () => unsubscribe()
   }, [sessionId])
+
+  useEffect(() => {
+    if (!sessionId || todos.length === 0) return
+
+    const interval = setInterval(() => {
+      const ahora = Timestamp.now()
+
+      todos.forEach((num) => {
+        if (
+          num.estado === 'reservado' &&
+          num.reservadoPor === sessionId &&
+          num.timestamp instanceof Timestamp
+        ) {
+          const segundosPasados = ahora.seconds - num.timestamp.seconds
+          if (segundosPasados > 600) { // 10 minutos
+            const id = num.id.toString().padStart(4, '0')
+            const ref = doc(db, 'estadoNumeros', id)
+
+            updateDoc(ref, {
+              estado: 'disponible',
+              reservadoPor: null,
+              timestamp: null
+            })
+              .then(() => {
+                console.log(`⏱️ Número #${id} liberado por caducidad automática`)
+              })
+              .catch((error) => {
+                console.error(`Error al liberar #${id}:`, error)
+              })
+          }
+        }
+      })
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [todos, sessionId])
   const reservarNumero = async (num: number) => {
     const id = num.toString().padStart(4, '0')
     const ref = doc(db, 'estadoNumeros', id)

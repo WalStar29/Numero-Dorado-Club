@@ -92,21 +92,22 @@ export default function Page() {
       return
     }
 
-    // ✅ Confirmación previa del usuario
     const confirmar = window.confirm(
       '¿Deseas enviar los datos por WhatsApp ahora?\n\nEsto es necesario para validar tu compra.'
     )
 
     if (!confirmar) return
 
-    const mensaje = `Hola, quiero confirmar mi compra:\n\n` +
-      `Nombre: ${nuevaVenta.nombre} ${nuevaVenta.apellido}\n` +
-      `Correo: ${nuevaVenta.correo}\n` +
-      `Teléfono: ${nuevaVenta.telefono}\n` +
-      `Método de pago: ${nuevaVenta.metodo}\n` +
-      `Monto: ${nuevaVenta.monto}\n` +
-      `Referencia: ${nuevaVenta.referencia}\n` +
-      (metodoPago === 'movil' ? `Banco: ${nuevaVenta.banco}` : '')
+    const mensaje = `🎉 ¡Hola! Quiero confirmar mi compra en *Número Dorado Club*:\n\n` +
+      `👤 *Nombre:* ${nuevaVenta.nombre} ${nuevaVenta.apellido}\n` +
+      `📧 *Correo:* ${nuevaVenta.correo}\n` +
+      `📱 *Teléfono:* ${nuevaVenta.telefono}\n` +
+      `💳 *Método de pago:* ${nuevaVenta.metodo}\n` +
+      `💰 *Monto:* ${nuevaVenta.monto}\n` +
+      `🔢 *Referencia:* ${nuevaVenta.referencia}\n` +
+      (metodoPago === 'movil' ? `🏦 *Banco:* ${nuevaVenta.banco}\n` : '') +
+      `🎯 *Números seleccionados:* ${nuevaVenta.numeros.join(', ')}\n\n` +
+      `✅ Espero confirmación para validar mi participación. ¡Gracias! 🙌`
 
     const numeroDestino = '584147996937'
     const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`
@@ -117,11 +118,9 @@ export default function Page() {
       return
     }
 
-    // ✅ Registrar la venta
     await setDoc(referenciaDoc, nuevaVenta)
     console.log('✅ Venta registrada en Firestore')
 
-    // 🔒 Marcar como reservado
     for (const num of numerosUnicos) {
       const ref = doc(db, 'estadoNumeros', num)
       await setDoc(ref, {
@@ -131,11 +130,9 @@ export default function Page() {
       }, { merge: true })
     }
 
-    // 🧼 Limpiar estado local
     localStorage.removeItem('carritoNumeros')
     setSeleccionados([])
 
-    // 🧭 Redirigir
     setTimeout(() => {
       setMostrarModal(false)
       document.body.style.overflow = 'auto'
@@ -147,6 +144,7 @@ export default function Page() {
     alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
   }
 }
+
 
   return (
     <div>
