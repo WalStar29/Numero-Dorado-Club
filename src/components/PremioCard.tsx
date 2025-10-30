@@ -38,13 +38,13 @@ export default function CarruselPremios() {
     seconds: 0,
   })
 
-  // 🎯 Sorteo el 20 de noviembre de 2025 a medianoche UTC
-  const drawDateUTC = new Date(Date.UTC(2025, 10, 20, 0, 0, 0)) // Mes 10 = noviembre
+  // 🎯 Sorteo el 20 de noviembre de 2025 a la 1:00 PM hora local
+  const drawDateLocal = new Date(2025, 10, 20, 13, 0, 0) // Mes 10 = noviembre
 
   useEffect(() => {
     const interval = setInterval(() => {
       const nowLocal = new Date()
-      const diff = drawDateUTC.getTime() - nowLocal.getTime()
+      const diff = drawDateLocal.getTime() - nowLocal.getTime()
 
       const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)))
       const hours = Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24))
@@ -80,17 +80,6 @@ export default function CarruselPremios() {
           className="premio-imagen"
           priority
         />
-
-        {/* 
-        <div className="flechas">
-          <button onClick={handlePrev}>
-            <FaArrowLeft />
-          </button>
-          <span>Premio {premio.id} de {premios.length}</span>
-          <button onClick={handleNext}>
-            <FaArrowRight />
-          </button>
-        </div>*/}
 
         <h2 className="premio-nombre">{premio.nombre}</h2>
         <p className="premio-descripcion">{premio.descripcion}</p>

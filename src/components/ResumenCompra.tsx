@@ -55,10 +55,6 @@ export default function ResumenCompra({
           <p><span>Total en Bolívares:</span><span>Bs {totalBs.toFixed(2)}</span></p>
         </div>
 
-        <div className="resumen-premio">
-          <p><span>Premio:</span><span>{premio}</span></p>
-          <p><span>Sorteo:</span><span>{fechaSorteo}</span></p>
-        </div>
       </div>
     </div>
   )
