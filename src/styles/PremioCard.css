@@ -82,12 +82,15 @@
 
 /* 🖼️ Imagen del premio */
 .premio-imagen {
-  width: 80%;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
   border-radius: 10px;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem auto;
   background-color: #fff;
+  display: block;
+  object-fit: contain;
 }
-
 
 /* 🧭 Flechas de navegación */
 .flechas {
@@ -242,6 +245,7 @@
   }
 
   .premio-imagen {
-    width: 100%;
+    max-width: 100%;
+    height: auto;
   }
 }

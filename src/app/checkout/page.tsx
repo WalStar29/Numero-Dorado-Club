@@ -25,7 +25,7 @@ export default function Page() {
   const [enviando, setEnviando] = useState(false)
 
   const precioPorNumero = 1.0
-  const tasaCambio = 200
+  const tasaCambio = 250
   const totalUSD = seleccionados.length * precioPorNumero
   const totalBs = totalUSD * tasaCambio
   const total = totalUSD
@@ -123,9 +123,10 @@ export default function Page() {
         `🔢 *Referencia:* ${nuevaVenta.referencia}\n` +
         (metodoPago === 'movil' ? `🏦 *Banco:* ${nuevaVenta.banco}\n` : '') +
         `🎯 *Números seleccionados:* ${nuevaVenta.numeros.join(', ')}\n\n` +
-        `✅ Espero confirmación para validar mi participación. ¡Gracias! 🙌`
+        `✅ ¡Gracias por confiar en Número Dorado Club! Tu compra ha sido recibida y será confirmada en las próximas 24 horas. Te avisaremos apenas esté lista. 🙌 ¡Mucha suerte!
+`
 
-      const numeroDestino = '584147996937'
+      const numeroDestino = '584223939612'
       const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`
       const ventana = window.open(url, '_blank')
 
@@ -217,8 +218,7 @@ export default function Page() {
       {metodoPago === 'binance' && (
         <div className="info-pago">
           <h4>Binance</h4>
-          {renderDato('Binance ID', '123456789')}
-          {renderDato('Email Binance', 'rifas')}
+          {renderDato('Binance ID', '545664561')}
           <h5>Importante:</h5>
           <ul>
             <li>Envía el monto exacto mostrado en tu carrito</li>
@@ -232,10 +232,10 @@ export default function Page() {
       {metodoPago === 'movil' && (
         <div className="info-pago">
           <h4>Pago Móvil</h4>
-          {renderDato('Banco', 'Banesco')}
-          {renderDato('Teléfono', '0412-123-4567')}
-          {renderDato('Cédula', 'V-12.345.678')}
-          {renderDato('Titular', 'Juan Pérez')}
+          {renderDato('Banco', 'BANCO NACINAL DE CREDITO')}
+          {renderDato('Teléfono', '0422-3939612')}
+          {renderDato('Cédula', 'V- 30.563.320-4')}
+          {renderDato('Titular', 'NUMERO DORADO CLUB GUACACHE')}
           <p><strong>Monto a pagar:</strong> Bs {totalBs.toFixed(2)}</p>
           <h5>Importante:</h5>
           <ul>
