@@ -1,19 +1,18 @@
 :root {
-  /* 🎨 Colores base y de acento */
-  --color-bg-primary: #ffdd00;       /* Fondo principal dorado claro */
-  --color-accent: #ffcd0d;           /* Acento dorado medio */
-  --color-accent-hover: #ffdf2c;     /* Acento dorado más claro para hover o foco */
-  /* 🖋️ Colores de texto y contraste */
-  --color-text-primary: #c9c9c9;     /* Texto principal gris claro */
-  --color-text-shadow: #000000;      /* Sombra suave para texto o elementos elevados */
-  /* 🔠 Tipografía */
+  --color-bg-primary: #ffdd00;
+  --color-accent: #ffcd0d;
+  --color-accent-hover: #ffdf2c;
+  --color-text-primary: #c9c9c9;
+  --color-text-shadow: #000000;
   --font-size-base: 0.95rem;
   --font-size-small: 0.85rem;
+  --gold-dark: #b38b00;
+  --black: #000000;
 }
 
 /* 📌 Navbar principal */
 .navbar {
-  background-color:#ffffff;
+  background-color: #ffffff;
   padding: 0.8rem 1.5rem;
   box-shadow: 0px 0px 15px -10px var(--color-text-shadow);
   position: sticky;
@@ -22,12 +21,16 @@
   font-size: var(--font-size-base);
 }
 
+/* Ocultar redes sociales de escritorio si el menú está activo */
+.navbar.menu-activo .navbar-social-desktop {
+  display: none;
+}
+
 /* 🧱 Contenedor interno */
 .navbar-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -46,6 +49,32 @@
   width: auto;
   border-radius: 6px;
   object-fit: contain;
+}
+
+/* 🌐 Redes sociales en escritorio */
+.navbar-social-desktop {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.navbar-social-desktop .navbar-icon-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: var(--color-text-shadow);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navbar-social-desktop .navbar-icon-item:hover {
+  color: var(--gold-dark);
+}
+
+.navbar-social-desktop .navbar-icon {
+  width: 40px;
+  height: 40px;
 }
 
 /* 🍔 Ícono hamburguesa */
@@ -103,6 +132,51 @@
   z-index: 150;
 }
 
+/* 📱 Redes sociales en menú móvil */
+.navbar-social-section {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.navbar-social-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--gold-dark);
+  margin-bottom: 1rem;
+  margin-top: -10%;
+}
+
+.navbar-icon-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.navbar-icon-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color-text-shadow);
+  transition: transform 0.3s ease, color 0.3s ease;
+  justify-content: left;
+  width: 100%;
+}
+.navbar-icon-item img{
+  margin: 0 5% 0 0;
+}
+
+.navbar-icon-item:hover {
+  transform: scale(1.05);
+  color: var(--gold-dark);
+}
+
+.navbar-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 0.3rem;
+}
+
 /* 🖥️ Responsividad */
 @media (max-width: 768px) {
   .navbar-menu-icon {
@@ -125,45 +199,9 @@
   .navbar-close-icon {
     font-size: 1.2rem;
   }
-}
 
+  .navbar-social-desktop {
+    display: none;
+  }
 
-
-.navbar-social-section {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.navbar-social-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--gold-dark);
-  margin-bottom: 1rem;
-}
-
-.navbar-icon-links {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.navbar-icon-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: var(--black);
-  transition: transform 0.3s ease;
-}
-
-.navbar-icon-item:hover {
-  transform: scale(1.05);
-  color: var(--gold-dark);
-}
-
-.navbar-icon {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 0.5rem;
 }

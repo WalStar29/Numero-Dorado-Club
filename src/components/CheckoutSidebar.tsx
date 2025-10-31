@@ -1,4 +1,5 @@
 'use client'
+import { useState, useEffect } from 'react'
 import { FaTrash } from 'react-icons/fa'
 import { useRouter } from 'next/navigation'
 import '@/styles/CheckoutSidebar.css'
@@ -15,21 +16,26 @@ export default function CheckoutSidebar({
   onRemoveAll,
 }: CheckoutSidebarProps) {
   const router = useRouter()
+  const [mostrarModal, setMostrarModal] = useState(false)
+
   const precioPorNumero = 1.0
-  const total = seleccionados.length * precioPorNumero
+  const unicos = [...new Set(seleccionados)]
+  const total = unicos.length * precioPorNumero
 
   const handleCheckout = () => {
-    if (seleccionados.length < 2) {
-      alert('⚠️ Debes seleccionar al menos 2 números para continuar con la compra.')
+    if (unicos.length < 2) {
+      setMostrarModal(true)
       return
     }
 
-    localStorage.setItem('carritoNumeros', JSON.stringify(seleccionados))
+    localStorage.setItem('carritoNumeros', JSON.stringify(unicos))
     router.push('/checkout')
   }
 
-  // 🔒 Deduplicar antes de renderizar
-  const unicos = [...new Set(seleccionados)]
+  // 🧩 Bloquear scroll cuando el modal está activo
+  useEffect(() => {
+    document.body.style.overflow = mostrarModal ? 'hidden' : 'auto'
+  }, [mostrarModal])
 
   return (
     <div className="checkout-sidebar">
@@ -63,7 +69,7 @@ export default function CheckoutSidebar({
           <div className="checkout-resumen">
             <div className="checkout-linea">
               <span>Subtotal:</span>
-              <span>${(unicos.length * precioPorNumero).toFixed(2)}</span>
+              <span>${total.toFixed(2)}</span>
             </div>
             <div className="checkout-linea">
               <span>Precio por número:</span>
@@ -80,6 +86,21 @@ export default function CheckoutSidebar({
             </button>
           </div>
         </>
+      )}
+
+      {/* 🪟 Modal personalizado */}
+      {mostrarModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h4 className="modal-titulo">⚠️ Selección insuficiente</h4>
+            <p className="modal-mensaje">
+              Debes seleccionar al menos <strong>2 números</strong> para continuar con la compra.
+            </p>
+            <button className="modal-cerrar" onClick={() => setMostrarModal(false)}>
+              Entendido
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )

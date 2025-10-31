@@ -7,8 +7,6 @@ import PremioCard from '@/components/PremioCard'
 import NumeroGrid from '@/components/NumeroGrid'
 import CheckoutSidebar from '@/components/CheckoutSidebar'
 import '@/styles/Home.css'
-import { BsJustify } from 'react-icons/bs'
-
 
 export default function Home() {
   const [seleccionados, setSeleccionados] = useState<number[]>([])
@@ -48,26 +46,28 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white text-gray-900">
       <Navbar />
+
       {/* 🎁 Sección del premio principal */}
       <section className="max-w-6xl mx-auto px-4 py-10">
         <PremioCard />
       </section>
 
-      {/* 🎲 Sección de selección de números */}
-      <section className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+      {/* 🎲 Sección de selección de números y checkout */}
+      <section className="layout-grid">
+        <div className="numero-grid-wrapper">
           <NumeroGrid
             seleccionados={seleccionados}
             setSeleccionados={setSeleccionados}
           />
         </div>
 
-        {/* 🛒 Sidebar de checkout */}
-        <CheckoutSidebar
-          seleccionados={seleccionados}
-          onRemove={handleRemove}
-          onRemoveAll={handleRemoveAll}
-        />
+        <div className="checkout-sidebar-wrapper">
+          <CheckoutSidebar
+            seleccionados={seleccionados}
+            onRemove={handleRemove}
+            onRemoveAll={handleRemoveAll}
+          />
+        </div>
       </section>
     </main>
   )

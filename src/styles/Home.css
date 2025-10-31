@@ -1,0 +1,32 @@
+/* 🧱 Layout responsive para selección y checkout */
+.layout-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.numero-grid-wrapper,
+.checkout-sidebar-wrapper {
+    width: 100%;
+}
+
+/* 🖥️ En escritorio: lado a lado */
+@media (min-width: 1024px) {
+    .layout-grid {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .numero-grid-wrapper {
+        flex: 2;
+        margin-right: 2rem;
+    }
+
+    .checkout-sidebar-wrapper {
+        flex: 1;
+        max-width: 360px;
+    }
+}

@@ -13,6 +13,7 @@
   --font-size-small: 0.85rem;
 }
 
+/* 🛒 Sidebar de checkout */
 .checkout-sidebar {
   background-color: white;
   color: var(--color-text-primary);
@@ -27,7 +28,7 @@
   justify-content: space-between;
 }
 
-/* Título y cantidad */
+/* 🧾 Título y cantidad */
 .checkout-titulo {
   font-size: 1.4rem;
   margin-bottom: 0.5rem;
@@ -45,13 +46,13 @@
   color: var(--color-text-shadow);
 }
 
-/* Mensaje si está vacío */
+/* 📭 Mensaje si está vacío */
 .checkout-vacio {
   font-style: italic;
   color: var(--color-text-primary);
 }
 
-/* Lista de números */
+/* 🔢 Lista de números */
 .checkout-lista {
   list-style: none;
   padding: 0;
@@ -73,7 +74,7 @@
   font-weight: 600;
 }
 
-/* Resumen de precios */
+/* 💰 Resumen de precios */
 .checkout-resumen {
   margin-bottom: 1rem;
 }
@@ -87,7 +88,7 @@
   color: var(--color-text-shadow);
 }
 
-/* Botones */
+/* 🧮 Botones */
 .checkout-botones {
   display: flex;
   flex-direction: column;
@@ -121,13 +122,14 @@
   transition: background-color 0.3s ease;
 }
 
-/* Mensaje de login */
+/* 🔐 Mensaje de login */
 .checkout-login-msg {
   font-size: var(--font-size-small);
   color: var(--color-accent-hover);
   font-style: italic;
 }
 
+/* 🗑️ Botón eliminar */
 .btn-eliminar {
   background: none;
   border: none;
@@ -142,7 +144,7 @@
   transform: scale(1.2);
 }
 
-/* Responsivo para móviles */
+/* 📱 Responsivo para móviles */
 @media (max-width: 768px) {
   .checkout-sidebar {
     padding: 1rem;
@@ -170,4 +172,56 @@
   .checkout-login-msg {
     font-size: var(--font-size-small);
   }
+}
+
+/* 🪟 Modal personalizado */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  max-width: 90%;
+  width: 360px;
+  text-align: center;
+}
+
+.modal-titulo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: var(--color-accent);
+}
+
+.modal-mensaje {
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-shadow);
+}
+
+.modal-cerrar {
+  background-color: var(--color-accent);
+  color: var(--color-text-shadow);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-cerrar:hover {
+  background-color: var(--color-accent-hover);
 }

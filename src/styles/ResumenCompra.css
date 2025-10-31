@@ -75,22 +75,6 @@
   justify-content: space-between;
   font-size: var(--font-size-base);
   color: var(--color-text-shadow);
-}
-
-.resumen-premio {
-  margin-top: 1rem;
-  padding: 0 1rem;
-  border-radius: 12px;
-  background-color: var(--color-accent-hover);
-  border: 1px solid var(--color-accent);
-  flex-direction: column;
-}
-
-.resumen-premio p {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--font-size-base);
-  color: var(--color-text-shadow);
-  font-weight: 500;
+  margin-top: 0.5rem;
 }
 

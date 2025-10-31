@@ -13,8 +13,6 @@ type ResumenCompraProps = {
 export default function ResumenCompra({
   seleccionados,
   precioPorNumero,
-  premio,
-  fechaSorteo,
   tasaCambio,
 }: ResumenCompraProps) {
   // 🔒 Deduplicar antes de renderizar
@@ -54,7 +52,6 @@ export default function ResumenCompra({
           <p><span>Total:</span><span>${totalUSD.toFixed(2)}</span></p>
           <p><span>Total en Bolívares:</span><span>Bs {totalBs.toFixed(2)}</span></p>
         </div>
-
       </div>
     </div>
   )
