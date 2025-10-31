@@ -1,18 +1,18 @@
 // src/firebase/firebase.ts
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyADvt9LfbroSoQR7QBgB10nim29F5UI5Jc',
-  authDomain: 'numerodarado.firebaseapp.com',
-  projectId: 'numerodarado',
-  storageBucket: 'numerodarado.firebasestorage.app',
-  messagingSenderId: '446510724979',
-  appId: '1:446510724979:web:6155ee0e3b318da9717706',
-  measurementId: 'G-3FXXBYEJ3P',
-};
+  apiKey: 'AIzaSyCQlWah7HWWxuRtmeAexOBfbO4YJn6AO70',
+  authDomain: 'numero-dorado-club.firebaseapp.com',
+  projectId: 'numero-dorado-club',
+  storageBucket: 'numero-dorado-club.firebasestorage.app',
+  messagingSenderId: '20638939423',
+  appId: '1:20638939423:web:2664516c6b7f93a4cf982a',
+  measurementId: 'G-MZ5MJESMY8',
+}
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
 
-export { db };
+export { db }
