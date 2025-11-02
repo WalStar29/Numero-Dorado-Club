@@ -19,7 +19,6 @@ export default function Page() {
   const [cedula, setCedula] = useState('')
   const [correo, setCorreo] = useState('')
   const [telefono, setTelefono] = useState('')
-  const telefonoValido = /^(0426|0416|0414|0424|0412|0422)[0-9]{7}$/.test(telefono)
   const [metodoPago, setMetodoPago] = useState('')
   const [bancoOperacion, setBancoOperacion] = useState('')
   const [referencia, setReferencia] = useState('')
@@ -34,13 +33,16 @@ export default function Page() {
   const totalBs = totalUSD * tasaCambio
   const total = totalUSD
 
+  const telefonoValido = /^(0426|0416|0414|0424|0412|0422)[0-9]{7}$/.test(telefono)
+  const cedulaValida = /^[0-9]{6,9}$/.test(cedula)
+  const correoValido = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(correo)
+
   const metodoActivo = (metodo: string) =>
     metodoPago === metodo ? 'btn-metodo activo' : 'btn-metodo'
 
   const renderDato = (label: string, valor: string) =>
     valor.trim() !== '' ? <p><strong>{label}:</strong> {valor}</p> : null
-
-    useEffect(() => {
+  useEffect(() => {
     const guardados = localStorage.getItem('carritoNumeros')
     if (guardados) {
       try {
@@ -61,9 +63,9 @@ export default function Page() {
   const formValido =
     nombre.trim() !== '' &&
     apellido.trim() !== '' &&
-    cedula.trim() !== '' &&
-    correo.trim() !== '' &&
-    telefono.trim() !== '' &&
+    cedulaValida &&
+    correoValido &&
+    telefonoValido &&
     metodoPago !== '' &&
     referencia.trim() !== '' &&
     numerosUnicos.length > 0 &&
@@ -127,8 +129,7 @@ export default function Page() {
       setEnviando(false)
     }
   }
-
-    return (
+  return (
     <div>
       <Navbar />
       {numerosUnicos.length > 0 ? (
@@ -143,7 +144,6 @@ export default function Page() {
         <p style={{ textAlign: 'center' }}>No hay números en el carrito.</p>
       )}
 
-      {/* Información de contacto */}
       <div className="resumen-box">
         <h3 className="titulo-dorado"><MdContactPage /> Información de Contacto</h3>
         <div className="campo-contacto">
@@ -156,12 +156,35 @@ export default function Page() {
         </div>
         <div className="campo-contacto">
           <label htmlFor="cedula">Cédula</label>
-          <input type="text" id="cedula" value={cedula} onChange={(e) => setCedula(e.target.value)} required/>
+          <input
+            type="text"
+            id="cedula"
+            value={cedula}
+            onChange={(e) => setCedula(e.target.value)}
+            required
+            className={cedula !== '' && !cedulaValida ? 'input-error' : ''}
+          />
+          {cedula !== '' && !cedulaValida && (
+            <p className="error-validacion">
+              ❌ La cédula debe tener entre 6 y 9 dígitos numéricos.
+            </p>
+          )}
         </div>
-
         <div className="campo-contacto">
           <label htmlFor="correo">Correo Electrónico</label>
-          <input type="email" id="correo" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
+          <input
+            type="email"
+            id="correo"
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value.toLowerCase())}
+            required
+            className={correo !== '' && !correoValido ? 'input-error' : ''}
+          />
+          {correo !== '' && !correoValido && (
+            <p className="error-validacion">
+              ❌ El correo debe estar en minúsculas y tener un dominio válido.
+            </p>
+          )}
         </div>
         <div className="campo-contacto">
           <label htmlFor="telefono">Número de Teléfono</label>
@@ -180,8 +203,6 @@ export default function Page() {
           )}
         </div>
       </div>
-
-      {/* Métodos de pago */}
       <div className="metodo-pago" style={{ marginTop: '2rem' }}>
         <h3 className="titulo-dorado"><FaCreditCard /> Método de Pago</h3>
         <div className="opciones-pago">
@@ -195,10 +216,14 @@ export default function Page() {
             <FaCreditCard /> Zelle<br /><small>Popular · USD</small>
           </button>
         </div>
+
+        {/* Renderizado condicional por método */}
         {metodoPago === 'binance' && (
           <div className="info-pago">
             <h4>Binance</h4>
-            {renderDato('Binance ID', '545664561')}
+            {renderDato('Titular', 'Walter-Cas')}
+            {renderDato('Binance UID', '545664561')}
+            {renderDato('Correo', 'castrowalter172913@hotmail.com')}
             <p><strong>Monto a pagar:</strong> $ {totalUSD.toFixed(2)}</p>
             <h5>Importante:</h5>
             <ul>
@@ -209,7 +234,6 @@ export default function Page() {
             </ul>
           </div>
         )}
-
         {metodoPago === 'movil' && (
           <div className="info-pago">
             <h4>Pago Móvil</h4>
@@ -227,7 +251,6 @@ export default function Page() {
             </ul>
           </div>
         )}
-
         {metodoPago === 'zelle' && (
           <div className="info-pago">
             <h4>Zelle</h4>
@@ -245,7 +268,6 @@ export default function Page() {
         )}
       </div>
 
-      {/* Referencia y banco */}
       <div className="referencia-pago" style={{ marginTop: '2rem' }}>
         <h4 className="titulo-dorado">Número de Operación</h4>
         <div className="campo-banco-operacion">
@@ -264,9 +286,26 @@ export default function Page() {
             <option value="">Selecciona tu banco</option>
             <option value="0102 - Banco de Venezuela">0102 - Banco de Venezuela</option>
             <option value="0114 - Banesco">0114 - Banesco</option>
-            <option value="0134 - Bancaribe">0134 - Bancaribe</option>
+            <option value="0191 - BNC (Banco Nacional de Crédito)">0191 - BNC</option>
             <option value="0172 - Bancamiga">0172 - Bancamiga</option>
-            <option value="0191 - BNC">0191 - BNC</option>
+            <option value="0134 - Bancaribe">0134 - Bancaribe</option>
+            <option value="0151 - Banco Fondo Común (BFC)">0151 - BFC</option>
+            <option value="0175 - Banco Bicentenario">0175 - Banco Bicentenario</option>
+            <option value="0105 - Banco Mercantil">0105 - Banco Mercantil</option>
+            <option value="0108 - Banco Provincial">0108 - Banco Provincial</option>
+            <option value="0115 - Banco Exterior">0115 - Banco Exterior</option>
+            <option value="0174 - Banplus">0174 - Banplus</option>
+            <option value="0137 - Banco Sofitasa">0137 - Banco Sofitasa</option>
+            <option value="0163 - Banco del Tesoro">0163 - Banco del Tesoro</option>
+            <option value="0166 - Banco Agrícola de Venezuela">0166 - Banco Agrícola</option>
+            <option value="0168 - Bancrecer">0168 - Bancrecer</option>
+            <option value="0169 - Mi Banco">0169 - Mi Banco</option>
+            <option value="0171 - Banco Activo">0171 - Banco Activo</option>
+            <option value="0156 - 100% Banco">0156 - 100% Banco</option>
+            <option value="0104 - Banco Venezolano de Crédito">0104 - Banco Venezolano de Crédito</option>
+            <option value="0121 - Banco Caroní">0121 - Banco Caroní</option>
+            <option value="0128 - Banco Federal">0128 - Banco Federal</option>
+            <option value="0146 - Banco Industrial de Venezuela">0146 - Banco Industrial de Venezuela</option>
           </select>
         </div>
 
@@ -283,16 +322,12 @@ export default function Page() {
           required
           className="input-referencia"
         />
-        <p className="texto-ayuda">
-          Ingresa el número de referencia, transacción o comprobante que te proporcionó tu banco o plataforma de pago.
-        </p>
         <p className="texto-ayuda2">
           <MdWarningAmber style={{ color: 'var(--color-red)', fontSize: '1.2rem' }} />
           <strong>Este número es esencial para verificar tu pago.</strong> Asegúrate de copiarlo correctamente del comprobante.
         </p>
       </div>
 
-      {/* Confirmación */}
       <div className="confirmacion-compra">
         <button
           className={`btn-confirmar ${formValido ? 'activo' : 'desactivado'}`}
@@ -305,8 +340,6 @@ export default function Page() {
               : `$${total.toFixed(2)}`
           }
         </button>
-
-        {/* Modal de confirmación de datos */}
         {mostrarModal && (
           <div className="modal-overlay">
             <div className="modal-contenido">
@@ -381,7 +414,6 @@ export default function Page() {
           </div>
         )}
 
-        {/* Modal final de compra confirmada */}
         {mostrarConfirmacionFinal && (
           <div className="modal-overlay">
             <div className="modal-contenido">
@@ -399,3 +431,8 @@ export default function Page() {
     </div>
   )
 }
+
+
+
+
+     

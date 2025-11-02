@@ -22,7 +22,7 @@ export default function Navbar() {
 
                 {/* Redes sociales visibles en escritorio */}
                 <div className="navbar-social-desktop">
-                    <a href="#" className="navbar-icon-item">
+                    <a href="https://www.youtube.com/channel/UCeaauCbNmk9SVHlQRNebQcg" target="_blank" className="navbar-icon-item">
                         <img src="/youtube.svg" alt="YouTube" className="navbar-icon" />
                     </a>
                     <a href="https://wa.me/584223939612" target="_blank" className="navbar-icon-item">
@@ -50,7 +50,7 @@ export default function Navbar() {
                 <div className="navbar-social-section">
                     <h3 className="navbar-social-title">Nuestras redes sociales</h3>
                     <div className="navbar-icon-links">
-                        <a href="#" className="navbar-icon-item"><img src="/youtube.svg" alt="YouTube" className="navbar-icon" /><span>YouTube</span></a>
+                        <a href="https://www.youtube.com/channel/UCeaauCbNmk9SVHlQRNebQcg" target="_blank" className="navbar-icon-item"><img src="/youtube.svg" alt="YouTube" className="navbar-icon" /><span>YouTube</span></a>
                         <a href="https://wa.me/584223939612" target="_blank" className="navbar-icon-item"><img src="/what.svg" alt="WhatsApp" className="navbar-icon" /><span>WhatsApp</span></a>
                         <a href="https://www.instagram.com/numerodoradoclub?igsh=MWg5cmhhZmU3ZDk5YQ==" target="_blank" className="navbar-icon-item"><img src="/insta.svg" alt="Instagram" className="navbar-icon" /><span>Instagram</span></a>
                         <a href="https://drive.google.com/file/d/1hfZQDUEEQcy2R6PJ9u_RDIKYRpLbBL9V/view?usp=drive_link" target="_blank" className="navbar-icon-item"><img src="/drive.svg" alt="googlge driver" className="navbar-icon" /><span>Terminos y Condiciones</span></a>

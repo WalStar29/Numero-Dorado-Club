@@ -29,7 +29,7 @@ export default function RootLayout({
         <link rel="icon" href="/trebol.svg" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Participa por el iPhone 15 Pro Max en el sorteo más confiable de Venezuela." />
+        <meta name="description" content="Participa en sorteo más confiable de Venezuela." />
         <title>Numero Dorado Club</title>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
