@@ -387,3 +387,9 @@ img[src$="trebol.svg"] {
 img[src$="trebol.svg"]:hover {
   transform: scale(1.1) rotate(-5deg);
 }
+
+.error-validacion {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}

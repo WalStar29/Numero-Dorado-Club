@@ -23,7 +23,7 @@ export default function CheckoutSidebar({
   const total = unicos.length * precioPorNumero
 
   const handleCheckout = () => {
-    if (unicos.length < 2) {
+    if (unicos.length < 1) {
       setMostrarModal(true)
       return
     }
@@ -32,7 +32,6 @@ export default function CheckoutSidebar({
     router.push('/checkout')
   }
 
-  // 🧩 Bloquear scroll cuando el modal está activo
   useEffect(() => {
     document.body.style.overflow = mostrarModal ? 'hidden' : 'auto'
   }, [mostrarModal])
@@ -88,13 +87,12 @@ export default function CheckoutSidebar({
         </>
       )}
 
-      {/* 🪟 Modal personalizado */}
       {mostrarModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h4 className="modal-titulo">⚠️ Selección insuficiente</h4>
             <p className="modal-mensaje">
-              Debes seleccionar al menos <strong>2 números</strong> para continuar con la compra.
+              Debes seleccionar al menos <strong>1 número</strong> para continuar con la compra.
             </p>
             <button className="modal-cerrar" onClick={() => setMostrarModal(false)}>
               Entendido

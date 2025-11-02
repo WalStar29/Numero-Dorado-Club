@@ -16,8 +16,10 @@ export default function Page() {
   const [seleccionados, setSeleccionados] = useState<number[]>([])
   const [nombre, setNombre] = useState('')
   const [apellido, setApellido] = useState('')
+  const [cedula, setCedula] = useState('')
   const [correo, setCorreo] = useState('')
   const [telefono, setTelefono] = useState('')
+  const telefonoValido = /^(0426|0416|0414|0424|0412|0422)[0-9]{7}$/.test(telefono)
   const [metodoPago, setMetodoPago] = useState('')
   const [bancoOperacion, setBancoOperacion] = useState('')
   const [referencia, setReferencia] = useState('')
@@ -59,6 +61,7 @@ export default function Page() {
   const formValido =
     nombre.trim() !== '' &&
     apellido.trim() !== '' &&
+    cedula.trim() !== '' &&
     correo.trim() !== '' &&
     telefono.trim() !== '' &&
     metodoPago !== '' &&
@@ -77,6 +80,7 @@ export default function Page() {
       const nuevaVenta = {
         nombre,
         apellido,
+        cedula,
         telefono,
         correo,
         banco: bancoOperacion,
@@ -151,12 +155,29 @@ export default function Page() {
           <input type="text" id="lastname" value={apellido} onChange={(e) => setApellido(e.target.value)} required />
         </div>
         <div className="campo-contacto">
+          <label htmlFor="cedula">Cédula</label>
+          <input type="text" id="cedula" value={cedula} onChange={(e) => setCedula(e.target.value)} required/>
+        </div>
+
+        <div className="campo-contacto">
           <label htmlFor="correo">Correo Electrónico</label>
           <input type="email" id="correo" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
         </div>
         <div className="campo-contacto">
           <label htmlFor="telefono">Número de Teléfono</label>
-          <input type="tel" id="telefono" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
+          <input
+            type="tel"
+            id="telefono"
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+            required
+            className={telefono !== '' && !telefonoValido ? 'input-error' : ''}
+          />
+          {telefono !== '' && !telefonoValido && (
+            <p className="error-validacion">
+              ❌ El número debe comenzar con 0426, 0416, 0414, 0424, 0412 o 0422 y tener 11 dígitos.
+            </p>
+          )}
         </div>
       </div>
 
@@ -305,6 +326,7 @@ export default function Page() {
                 <h4>Información de Contacto</h4>
                 <p><strong>Nombre:</strong> {nombre}</p>
                 <p><strong>Apellido:</strong> {apellido}</p>
+                <p><strong>Cédula:</strong> {cedula}</p>
                 <p><strong>Correo Electrónico:</strong> {correo}</p>
                 <p><strong>Teléfono:</strong> {telefono}</p>
               </section>
