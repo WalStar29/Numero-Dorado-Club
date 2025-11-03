@@ -88,7 +88,7 @@ export default function CarruselPremios() {
         <div className="premio-info">
           <span>Sorteo: 1 Dic 2025</span>
           <span>·</span>
-          <span>9999 números</span>
+          <span>10000 números</span>
         </div>
 
         <div className="contador">

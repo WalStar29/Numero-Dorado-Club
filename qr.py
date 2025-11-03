@@ -3,7 +3,7 @@ from PIL import Image
 import os
 
 # URL del proyecto
-url = "https://numero-dorado-club.vercel.app"
+url = "https://numerodoradoclub.com/"
 logo_path = "logo.png"  # Asegúrate que tenga fondo transparente
 
 # Validar existencia del logo
