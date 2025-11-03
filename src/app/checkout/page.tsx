@@ -90,6 +90,7 @@ export default function Page() {
   try {
     const ahora = new Date()
     const fechaHora = ahora.toISOString()
+    const bancoFinal = metodoPago === 'movil' ? bancoOperacion : 'No aplica'
 
     const nuevaVenta = {
       nombre,
@@ -97,7 +98,7 @@ export default function Page() {
       cedula,
       telefono,
       correo,
-      banco: bancoOperacion,
+      banco: bancoFinal,
       metodo:
         metodoPago === 'movil' ? 'Pago móvil' :
         metodoPago === 'binance' ? 'Binance Pay' :
@@ -143,7 +144,6 @@ export default function Page() {
     setEnviando(false)
   }
 }
-
   
   return (
     <div>
