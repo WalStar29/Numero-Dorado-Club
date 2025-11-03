@@ -285,44 +285,47 @@ export default function Page() {
 
       <div className="referencia-pago" style={{ marginTop: '2rem' }}>
         <h4 className="titulo-dorado">Número de Operación</h4>
-        <div className="campo-banco-operacion">
-          <label htmlFor="bancoOperacion" className="label-referencia">
-            Banco con el que realizaste la operación <span className="requerido">*</span>
-          </label>
-          <select
-            id="bancoOperacion"
-            name="bancoOperacion"
-            value={bancoOperacion}
-            onChange={(e) => setBancoOperacion(e.target.value)}
-            required
-            className="select-banco"
-            disabled={metodoPago !== 'movil'}
-          >
-            <option value="">Selecciona tu banco</option>
-            <option value="0102 - Banco de Venezuela">0102 - Banco de Venezuela</option>
-            <option value="0114 - Banesco">0114 - Banesco</option>
-            <option value="0191 - BNC (Banco Nacional de Crédito)">0191 - BNC</option>
-            <option value="0172 - Bancamiga">0172 - Bancamiga</option>
-            <option value="0134 - Bancaribe">0134 - Bancaribe</option>
-            <option value="0151 - Banco Fondo Común (BFC)">0151 - BFC</option>
-            <option value="0175 - Banco Bicentenario">0175 - Banco Bicentenario</option>
-            <option value="0105 - Banco Mercantil">0105 - Banco Mercantil</option>
-            <option value="0108 - Banco Provincial">0108 - Banco Provincial</option>
-            <option value="0115 - Banco Exterior">0115 - Banco Exterior</option>
-            <option value="0174 - Banplus">0174 - Banplus</option>
-            <option value="0137 - Banco Sofitasa">0137 - Banco Sofitasa</option>
-            <option value="0163 - Banco del Tesoro">0163 - Banco del Tesoro</option>
-            <option value="0166 - Banco Agrícola de Venezuela">0166 - Banco Agrícola</option>
-            <option value="0168 - Bancrecer">0168 - Bancrecer</option>
-            <option value="0169 - Mi Banco">0169 - Mi Banco</option>
-            <option value="0171 - Banco Activo">0171 - Banco Activo</option>
-            <option value="0156 - 100% Banco">0156 - 100% Banco</option>
-            <option value="0104 - Banco Venezolano de Crédito">0104 - Banco Venezolano de Crédito</option>
-            <option value="0121 - Banco Caroní">0121 - Banco Caroní</option>
-            <option value="0128 - Banco Federal">0128 - Banco Federal</option>
-            <option value="0146 - Banco Industrial de Venezuela">0146 - Banco Industrial de Venezuela</option>
-          </select>
-        </div>
+
+        {metodoPago === 'movil' && (
+          <div className="campo-banco-operacion">
+            <label htmlFor="bancoOperacion" className="label-referencia">
+              Banco con el que realizaste la operación <span className="requerido">*</span>
+            </label>
+            <select
+              id="bancoOperacion"
+              name="bancoOperacion"
+              value={bancoOperacion}
+              onChange={(e) => setBancoOperacion(e.target.value)}
+              required
+              className="select-banco"
+            >
+              <option value="">Selecciona tu banco</option>
+              <option value="0102 - Banco de Venezuela">0102 - Banco de Venezuela</option>
+              <option value="0114 - Banesco">0114 - Banesco</option>
+              <option value="0191 - BNC (Banco Nacional de Crédito)">0191 - BNC</option>
+              <option value="0172 - Bancamiga">0172 - Bancamiga</option>
+              <option value="0134 - Bancaribe">0134 - Bancaribe</option>
+              <option value="0151 - Banco Fondo Común (BFC)">0151 - BFC</option>
+              <option value="0175 - Banco Bicentenario">0175 - Banco Bicentenario</option>
+              <option value="0105 - Banco Mercantil">0105 - Banco Mercantil</option>
+              <option value="0108 - Banco Provincial">0108 - Banco Provincial</option>
+              <option value="0115 - Banco Exterior">0115 - Banco Exterior</option>
+              <option value="0174 - Banplus">0174 - Banplus</option>
+              <option value="0137 - Banco Sofitasa">0137 - Banco Sofitasa</option>
+              <option value="0163 - Banco del Tesoro">0163 - Banco del Tesoro</option>
+              <option value="0166 - Banco Agrícola de Venezuela">0166 - Banco Agrícola</option>
+              <option value="0168 - Bancrecer">0168 - Bancrecer</option>
+              <option value="0169 - Mi Banco">0169 - Mi Banco</option>
+              <option value="0171 - Banco Activo">0171 - Banco Activo</option>
+              <option value="0156 - 100% Banco">0156 - 100% Banco</option>
+              <option value="0104 - Banco Venezolano de Crédito">0104 - Banco Venezolano de Crédito</option>
+              <option value="0121 - Banco Caroní">0121 - Banco Caroní</option>
+              <option value="0128 - Banco Federal">0128 - Banco Federal</option>
+              <option value="0146 - Banco Industrial de Venezuela">0146 - Banco Industrial de Venezuela</option>
+            </select>
+          </div>
+        )}
+
         <label htmlFor="referencia" className="label-referencia">
           Número de Referencia / Transacción <span className="requerido">*</span>
         </label>
