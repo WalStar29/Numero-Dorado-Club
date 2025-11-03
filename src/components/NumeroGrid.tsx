@@ -12,7 +12,7 @@ import {
 import { db } from '@/firebase/firebase'
 import '@/styles/NumeroGrid.css'
 
-const TOTAL_NUMEROS = 9999
+const TOTAL_NUMEROS = 10000
 
 type NumeroGridProps = {
   seleccionados: number[]
@@ -97,7 +97,7 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
           num.timestamp instanceof Timestamp
         ) {
           const segundosPasados = ahora.seconds - num.timestamp.seconds
-          if (segundosPasados > 600) { // 10 minutos
+          if (segundosPasados > 1200) { // 20 minutos
             const id = num.id.toString().padStart(4, '0')
             const ref = doc(db, 'estadoNumeros', id)
 
@@ -116,9 +116,9 @@ export default function NumeroGrid({ seleccionados, setSeleccionados }: NumeroGr
         }
       })
     }, 1000)
-
     return () => clearInterval(interval)
-  }, [todos, sessionId])
+  }, 
+  [todos, sessionId])
   const reservarNumero = async (num: number) => {
     const id = num.toString().padStart(4, '0')
     const ref = doc(db, 'estadoNumeros', id)
