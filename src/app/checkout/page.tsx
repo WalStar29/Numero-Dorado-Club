@@ -72,68 +72,78 @@ export default function Page() {
     (metodoPago === 'binance' || metodoPago === 'zelle' || bancoOperacion.trim() !== '')
 
   const handleConfirmarCompra = async () => {
-    if (enviando) return
-    setEnviando(true)
+  if (enviando) return
+  setEnviando(true)
 
-    try {
-      const ahora = new Date()
-      const fechaHora = ahora.toISOString()
+  const mensajeWhatsApp = `Hola, envío el comprobante de pago para la referencia: ${referencia}`
+  const numeroWhatsApp = '04223939612'
+  const urlWhatsApp = `https://wa.me/58${numeroWhatsApp.replace(/^0/, '')}?text=${encodeURIComponent(mensajeWhatsApp)}`
 
-      const nuevaVenta = {
-        nombre,
-        apellido,
-        cedula,
-        telefono,
-        correo,
-        banco: bancoOperacion,
-        metodo:
-          metodoPago === 'movil' ? 'Pago móvil' :
-          metodoPago === 'binance' ? 'Binance Pay' :
-          'Zelle',
-        numeros: numerosUnicos.map(n => n.toString().padStart(4, '0')),
-        referencia,
-        monto: metodoPago === 'movil'
-          ? `Bs ${totalBs.toFixed(2)}`
-          : `$${totalUSD.toFixed(2)}`,
-        fechaHora
-      }
+  const confirmarEnvio = window.confirm('📲 Serás redirigido a WhatsApp para enviar tu comprobante. ¿Deseas continuar?')
 
-      const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
-      const docExistente = await getDoc(referenciaDoc)
-
-      if (docExistente.exists()) {
-        alert('⚠️ Ya existe una venta con esta referencia. Usa una diferente.')
-        setEnviando(false)
-        return
-      }
-
-      await setDoc(referenciaDoc, nuevaVenta)
-      for (const num of nuevaVenta.numeros) {
-        const ref = doc(db, 'estadoNumeros', num)
-        await setDoc(ref, {
-          estado: 'reservado',
-          reservadoPor: 'confirmado',
-          timestamp: Date.now()
-        }, { merge: true })
-      }
-
-      localStorage.removeItem('carritoNumeros')
-      setSeleccionados([])
-      setMostrarModal(false)
-      setMostrarConfirmacionFinal(true)
-
-      const mensajeWhatsApp = `Hola, envío el comprobante de pago para la referencia: ${referencia}`
-      const numeroWhatsApp = '04147996937'
-      const urlWhatsApp = `https://wa.me/58${numeroWhatsApp.replace(/^0/, '')}?text=${encodeURIComponent(mensajeWhatsApp)}`
-      window.open(urlWhatsApp, '_blank')
-
-    } catch (error) {
-      console.error('❌ Error al guardar venta en Firestore:', error)
-      alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
-    } finally {
-      setEnviando(false)
-    }
+  if (!confirmarEnvio) {
+    alert('❌ El envío fue cancelado. No se ha registrado la compra.')
+    setEnviando(false)
+    return // ⛔️ Detiene el flujo completamente
   }
+
+  try {
+    const ahora = new Date()
+    const fechaHora = ahora.toISOString()
+
+    const nuevaVenta = {
+      nombre,
+      apellido,
+      cedula,
+      telefono,
+      correo,
+      banco: bancoOperacion,
+      metodo:
+        metodoPago === 'movil' ? 'Pago móvil' :
+        metodoPago === 'binance' ? 'Binance Pay' :
+        'Zelle',
+      numeros: numerosUnicos.map(n => n.toString().padStart(4, '0')),
+      referencia,
+      monto: metodoPago === 'movil'
+        ? `Bs ${totalBs.toFixed(2)}`
+        : `$${totalUSD.toFixed(2)}`,
+      fechaHora
+    }
+
+    const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
+    const docExistente = await getDoc(referenciaDoc)
+
+    if (docExistente.exists()) {
+      alert('⚠️ Ya existe una venta con esta referencia. Usa una diferente.')
+      setEnviando(false)
+      return
+    }
+
+    await setDoc(referenciaDoc, nuevaVenta)
+    for (const num of nuevaVenta.numeros) {
+      const ref = doc(db, 'estadoNumeros', num)
+      await setDoc(ref, {
+        estado: 'reservado',
+        reservadoPor: 'confirmado',
+        timestamp: Date.now()
+      }, { merge: true })
+    }
+
+    localStorage.removeItem('carritoNumeros')
+    setSeleccionados([])
+    setMostrarModal(false)
+    setMostrarConfirmacionFinal(true)
+
+    window.open(urlWhatsApp, '_blank')
+
+  } catch (error) {
+    console.error('❌ Error al guardar venta en Firestore:', error)
+    alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
+  } finally {
+    setEnviando(false)
+  }
+}
+
   
   return (
     <div>

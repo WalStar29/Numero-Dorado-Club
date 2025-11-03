@@ -38,8 +38,8 @@ export default function CarruselPremios() {
     seconds: 0,
   })
 
-  // 🎯 Sorteo el 20 de noviembre de 2025 a la 1:00 PM hora local
-  const drawDateLocal = new Date(2025, 10, 20, 13, 0, 0) // Mes 10 = noviembre
+  // 🎯 Sorteo el 1 de diciembre de 2025 a la 1:00 PM hora local
+  const drawDateLocal = new Date(2025, 11, 1, 13, 0, 0) // Mes 11 = diciembre
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -86,7 +86,7 @@ export default function CarruselPremios() {
         <p className="premio-valor">{premio.valor}</p>
 
         <div className="premio-info">
-          <span>Sorteo: 20 Nov 2025</span>
+          <span>Sorteo: 1 Dic 2025</span>
           <span>·</span>
           <span>9999 números</span>
         </div>
@@ -120,3 +120,4 @@ export default function CarruselPremios() {
     </div>
   )
 }
+
