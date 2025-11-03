@@ -42,6 +42,7 @@ export default function Page() {
 
   const renderDato = (label: string, valor: string) =>
     valor.trim() !== '' ? <p><strong>{label}:</strong> {valor}</p> : null
+
   useEffect(() => {
     const guardados = localStorage.getItem('carritoNumeros')
     if (guardados) {
@@ -59,7 +60,6 @@ export default function Page() {
   useEffect(() => {
     document.body.style.overflow = mostrarModal ? 'hidden' : 'auto'
   }, [mostrarModal])
-
   const formValido =
     nombre.trim() !== '' &&
     apellido.trim() !== '' &&
@@ -122,6 +122,11 @@ export default function Page() {
       setMostrarModal(false)
       setMostrarConfirmacionFinal(true)
 
+      const mensajeWhatsApp = `Hola, envío el comprobante de pago para la referencia: ${referencia}`
+      const numeroWhatsApp = '04147996937'
+      const urlWhatsApp = `https://wa.me/58${numeroWhatsApp.replace(/^0/, '')}?text=${encodeURIComponent(mensajeWhatsApp)}`
+      window.open(urlWhatsApp, '_blank')
+
     } catch (error) {
       console.error('❌ Error al guardar venta en Firestore:', error)
       alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
@@ -129,6 +134,7 @@ export default function Page() {
       setEnviando(false)
     }
   }
+  
   return (
     <div>
       <Navbar />
@@ -217,7 +223,6 @@ export default function Page() {
           </button>
         </div>
 
-        {/* Renderizado condicional por método */}
         {metodoPago === 'binance' && (
           <div className="info-pago">
             <h4>Binance</h4>
@@ -308,7 +313,6 @@ export default function Page() {
             <option value="0146 - Banco Industrial de Venezuela">0146 - Banco Industrial de Venezuela</option>
           </select>
         </div>
-
         <label htmlFor="referencia" className="label-referencia">
           Número de Referencia / Transacción <span className="requerido">*</span>
         </label>
@@ -340,6 +344,7 @@ export default function Page() {
               : `$${total.toFixed(2)}`
           }
         </button>
+
         {mostrarModal && (
           <div className="modal-overlay">
             <div className="modal-contenido">
@@ -397,6 +402,7 @@ export default function Page() {
               <section className="mensaje-confirmacion">
                 <p>🛡️ <strong>Importante:</strong> Asegúrese de que todos los datos estén correctos. Esta información será utilizada para validar su participación en el sorteo del <strong>Número Dorado</strong>.</p><br />
                 <p>📲 Al hacer clic en <strong>Enviar</strong>, su compra será registrada y validada en un plazo de <strong>24 a 48 horas</strong>.</p><br />
+                <p>📤 <strong>El comprobante de pago será enviado a través de WhatsApp</strong> junto con el número de referencia. Asegúrese de adjuntar la imagen manualmente en el chat que se abrirá automáticamente.</p><br />
                 <p>🚫 <strong>Evite cualquier intento de estafa o modificación del comprobante.</strong> Solo se validarán los datos enviados desde esta plataforma.</p><br />
                 <p>🙌 ¡Gracias por confiar en nosotros y mucha suerte!</p>
               </section>
@@ -431,8 +437,3 @@ export default function Page() {
     </div>
   )
 }
-
-
-
-
-     
