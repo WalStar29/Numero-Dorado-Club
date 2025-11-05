@@ -17,6 +17,7 @@ export default function Page() {
   const [nombre, setNombre] = useState('')
   const [apellido, setApellido] = useState('')
   const [cedula, setCedula] = useState('')
+  const [fechaNacimiento, setFechaNacimiento] = useState('')
   const [correo, setCorreo] = useState('')
   const [telefono, setTelefono] = useState('')
   const [metodoPago, setMetodoPago] = useState('')
@@ -25,14 +26,12 @@ export default function Page() {
   const [mostrarModal, setMostrarModal] = useState(false)
   const [mostrarConfirmacionFinal, setMostrarConfirmacionFinal] = useState(false)
   const [enviando, setEnviando] = useState(false)
-
   const precioPorNumero = 1.0
   const tasaCambio = 250
   const numerosUnicos = Array.from(new Set(seleccionados))
   const totalUSD = numerosUnicos.length * precioPorNumero
   const totalBs = totalUSD * tasaCambio
   const total = totalUSD
-
   const telefonoValido = /^(0426|0416|0414|0424|0412|0422)[0-9]{7}$/.test(telefono)
   const cedulaValida = /^[0-9]{6,9}$/.test(cedula)
   const correoValido = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(correo)
@@ -42,6 +41,17 @@ export default function Page() {
 
   const renderDato = (label: string, valor: string) =>
     valor.trim() !== '' ? <p><strong>{label}:</strong> {valor}</p> : null
+
+  const fechaNacimientoValida = (() => {
+    if (!fechaNacimiento) return false
+    const nacimiento = new Date(fechaNacimiento)
+    const referencia = new Date('2025-01-01')
+    const edad = referencia.getFullYear() - nacimiento.getFullYear()
+    const mes = referencia.getMonth() - nacimiento.getMonth()
+    const dia = referencia.getDate() - nacimiento.getDate()
+    if (mes < 0 || (mes === 0 && dia < 0)) return edad - 1 >= 18
+    return edad >= 18
+  })()
 
   useEffect(() => {
     const guardados = localStorage.getItem('carritoNumeros')
@@ -60,10 +70,12 @@ export default function Page() {
   useEffect(() => {
     document.body.style.overflow = mostrarModal ? 'hidden' : 'auto'
   }, [mostrarModal])
+
   const formValido =
     nombre.trim() !== '' &&
     apellido.trim() !== '' &&
     cedulaValida &&
+    fechaNacimientoValida &&
     correoValido &&
     telefonoValido &&
     metodoPago !== '' &&
@@ -96,6 +108,7 @@ export default function Page() {
       nombre,
       apellido,
       cedula,
+      fechaNacimiento,
       telefono,
       correo,
       banco: bancoFinal,
@@ -183,6 +196,22 @@ export default function Page() {
           {cedula !== '' && !cedulaValida && (
             <p className="error-validacion">
               ❌ La cédula debe tener entre 6 y 9 dígitos numéricos.
+            </p>
+          )}
+        </div>
+        <div className="campo-contacto">
+          <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
+          <input
+            type="date"
+            id="fechaNacimiento"
+            value={fechaNacimiento}
+            onChange={(e) => setFechaNacimiento(e.target.value)}
+            required
+            className={fechaNacimiento !== '' && !fechaNacimientoValida ? 'input-error' : ''}
+          />
+          {fechaNacimiento !== '' && !fechaNacimientoValida && (
+            <p className="error-validacion">
+              ❌ Debes tener al menos 18 años para participar.
             </p>
           )}
         </div>
