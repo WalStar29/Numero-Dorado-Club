@@ -68,6 +68,35 @@ export default function Page() {
   }, [])
 
   useEffect(() => {
+  const ahora = Date.now()
+  const entradaAnterior = localStorage.getItem('inicioCheckout')
+
+  if (!entradaAnterior) {
+      // 🧠 Primera vez que entra: se guarda el tiempo
+      localStorage.setItem('inicioCheckout', ahora.toString())
+    } else {
+      const diferenciaMinutos = (ahora - parseInt(entradaAnterior)) / 1000 / 60
+      if (diferenciaMinutos > 10) {
+        alert('⏳ Tiempo expirado. Por favor regrese a la página principal.')
+        localStorage.removeItem('inicioCheckout')
+        localStorage.removeItem('carritoNumeros')
+        router.replace('/')
+        return
+      }
+    }
+
+    // ⏱️ Temporizador para mostrar alerta si permanece más de 10 minutos
+    const temporizador = setTimeout(() => {
+      alert('⏳ Tiempo expirado. Por favor regrese a la página principal.')
+      localStorage.removeItem('inicioCheckout')
+      localStorage.removeItem('carritoNumeros')
+      router.replace('/')
+    }, 600000) // 10 minutos en milisegundos
+
+    return () => clearTimeout(temporizador)
+  }, [])
+
+  useEffect(() => {
     document.body.style.overflow = mostrarModal ? 'hidden' : 'auto'
   }, [mostrarModal])
 
@@ -84,19 +113,19 @@ export default function Page() {
     (metodoPago === 'binance' || metodoPago === 'zelle' || bancoOperacion.trim() !== '')
 
   const handleConfirmarCompra = async () => {
-  if (enviando) return
-  setEnviando(true)
+    if (enviando) return
+    setEnviando(true)
 
-  const mensajeWhatsApp = `Hola, envío el comprobante de pago para la referencia: ${referencia}`
-  const numeroWhatsApp = '04223939612'
-  const urlWhatsApp = `https://wa.me/58${numeroWhatsApp.replace(/^0/, '')}?text=${encodeURIComponent(mensajeWhatsApp)}`
+    const mensajeWhatsApp = `Hola, envío el comprobante de pago para la referencia: ${referencia}`
+    const numeroWhatsApp = '04223939612'
+    const urlWhatsApp = `https://wa.me/58${numeroWhatsApp.replace(/^0/, '')}?text=${encodeURIComponent(mensajeWhatsApp)}`
 
-  const confirmarEnvio = window.confirm('📲 Serás redirigido a WhatsApp para enviar tu comprobante. ¿Deseas continuar?')
+    const confirmarEnvio = window.confirm('📲 Serás redirigido a WhatsApp para enviar tu comprobante. ¿Deseas continuar?')
 
-  if (!confirmarEnvio) {
-    alert('❌ El envío fue cancelado. No se ha registrado la compra.')
-    setEnviando(false)
-    return // ⛔️ Detiene el flujo completamente
+    if (!confirmarEnvio) {
+      alert('❌ El envío fue cancelado. No se ha registrado la compra.')
+      setEnviando(false)
+      return // ⛔️ Detiene el flujo completamente
   }
 
   try {
