@@ -1,14 +1,6 @@
 'use client'
 import { useState, useEffect, ChangeEvent } from 'react'
-import {
-  collection,
-  onSnapshot,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  Timestamp
-} from 'firebase/firestore'
+import { collection, onSnapshot, doc, getDoc, setDoc, updateDoc,Timestamp} from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
 import '@/styles/NumeroGrid.css'
 

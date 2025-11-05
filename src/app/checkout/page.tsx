@@ -110,7 +110,7 @@ export default function Page() {
         : `$${totalUSD.toFixed(2)}`,
       fechaHora
     }
-
+    
     const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
     const docExistente = await getDoc(referenciaDoc)
 
