@@ -101,20 +101,8 @@ export default function Page() {
     (metodoPago === 'binance' || metodoPago === 'zelle' || bancoOperacion.trim() !== '')
 
   const handleConfirmarCompra = async () => {
-    if (enviando) return
-    setEnviando(true)
-
-    const mensajeWhatsApp = `Hola, envío el comprobante de pago para la referencia: ${referencia}`
-    const numeroWhatsApp = '04223939612'
-    const urlWhatsApp = `https://wa.me/58${numeroWhatsApp.replace(/^0/, '')}?text=${encodeURIComponent(mensajeWhatsApp)}`
-
-    const confirmarEnvio = window.confirm('📲 Serás redirigido a WhatsApp para enviar tu comprobante. ¿Deseas continuar?')
-
-    if (!confirmarEnvio) {
-      alert('❌ El envío fue cancelado. No se ha registrado la compra.')
-      setEnviando(false)
-      return // ⛔️ Detiene el flujo completamente
-  }
+  if (enviando) return
+  setEnviando(true)
 
   try {
     const ahora = new Date()
@@ -139,7 +127,7 @@ export default function Page() {
         : `$${totalUSD.toFixed(2)}`,
       fechaHora
     }
-    
+
     const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
     const docExistente = await getDoc(referenciaDoc)
 
@@ -163,16 +151,16 @@ export default function Page() {
     setSeleccionados([])
     setMostrarModal(false)
     setMostrarConfirmacionFinal(true)
-
-    window.open(urlWhatsApp, '_blank')
+    alert(`✅ Compra registrada exitosamente.\nReferencia: ${referencia}`)
 
   } catch (error) {
-    console.error('❌ Error al guardar venta en Firestore:', error)
+    console.error('❌ Error:', error)
     alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
   } finally {
     setEnviando(false)
   }
 }
+
   
   return (
     <div>
