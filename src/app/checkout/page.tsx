@@ -313,7 +313,7 @@ export default function Page() {
             {renderDato('Banco', 'BANCO NACINAL DE CREDITO')}
             {renderDato('Teléfono', '0422-3939612')}
             {renderDato('Cédula', 'V- 30.563.320-4')}
-            {renderDato('Titular', 'NUMERO DORADO CLUB GUACACHE')}
+            {renderDato('Titular', 'NUMERO DORADO CLUB')}
             <p><strong>Monto a pagar:</strong> Bs {totalBs.toFixed(2)}</p>
             <h5>Importante:</h5>
             <ul>
