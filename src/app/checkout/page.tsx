@@ -359,10 +359,10 @@ export default function Page() {
             >
               <option value="">Selecciona tu banco</option>
               <option value="0102 - Banco de Venezuela">0102 - Banco de Venezuela</option>
-              <option value="0114 - Banesco">0114 - Banesco</option>
+              <option value="0134 - Banesco">0114 - Banesco</option>
               <option value="0191 - BNC (Banco Nacional de Crédito)">0191 - BNC</option>
               <option value="0172 - Bancamiga">0172 - Bancamiga</option>
-              <option value="0134 - Bancaribe">0134 - Bancaribe</option>
+              <option value="0114 - Bancaribe">0134 - Bancaribe</option>
               <option value="0151 - Banco Fondo Común (BFC)">0151 - BFC</option>
               <option value="0175 - Banco Bicentenario">0175 - Banco Bicentenario</option>
               <option value="0105 - Banco Mercantil">0105 - Banco Mercantil</option>
