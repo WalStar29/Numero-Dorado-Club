@@ -328,7 +328,7 @@ export default function Page() {
           <div className="info-pago">
             <h4>Zelle</h4>
             {renderDato('Correo Zelle', 'Adrianaguerrero2890@gmail.com')}
-            {renderDato('Titular', 'Yennifer Guerrero')}
+            {renderDato('Titular', 'Yennifer Guerrero Bastos')}
             <p><strong>Monto a pagar:</strong> $ {totalUSD.toFixed(2)}</p>
             <h5>Importante:</h5>
             <ul>
