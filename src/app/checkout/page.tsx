@@ -32,7 +32,7 @@ export default function Page() {
   const totalUSD = numerosUnicos.length * precioPorNumero
   const totalBs = totalUSD * tasaCambio
   const total = totalUSD
-  const telefonoValido = /^(0426|0416|0414|0424|0412|0422)[0-9]{7}$/.test(telefono)
+  const telefonoValido = /^((0426|0416|0414|0424|0412|0422)[0-9]{7}|(\+58)?(4[1-2][2-6])[0-9]{7}|(\+34)?[6-7][0-9]{8}|(\+57)?3[0-9]{9}|(\+1)?[2-9][0-9]{2}[2-9][0-9]{6}|(\+593)?9[0-9]{8}|(\+51)?9[0-9]{8}|(\+55)?(1[1-9]|[2-9][0-9])[9][0-9]{8}|(\+56)?9[0-9]{8}|(\+54)?9[0-9]{10})$/.test(telefono);
   const cedulaValida = /^[0-9]{6,9}$/.test(cedula)
   const correoValido = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(correo)
 
@@ -41,17 +41,6 @@ export default function Page() {
 
   const renderDato = (label: string, valor: string) =>
     valor.trim() !== '' ? <p><strong>{label}:</strong> {valor}</p> : null
-
-  const fechaNacimientoValida = (() => {
-    if (!fechaNacimiento) return false
-    const nacimiento = new Date(fechaNacimiento)
-    const referencia = new Date('2025-01-01')
-    const edad = referencia.getFullYear() - nacimiento.getFullYear()
-    const mes = referencia.getMonth() - nacimiento.getMonth()
-    const dia = referencia.getDate() - nacimiento.getDate()
-    if (mes < 0 || (mes === 0 && dia < 0)) return edad - 1 >= 18
-    return edad >= 18
-  })()
 
   useEffect(() => {
     const guardados = localStorage.getItem('carritoNumeros')
@@ -104,7 +93,6 @@ export default function Page() {
     nombre.trim() !== '' &&
     apellido.trim() !== '' &&
     cedulaValida &&
-    fechaNacimientoValida &&
     correoValido &&
     telefonoValido &&
     metodoPago !== '' &&
@@ -137,7 +125,6 @@ export default function Page() {
       nombre,
       apellido,
       cedula,
-      fechaNacimiento,
       telefono,
       correo,
       banco: bancoFinal,
@@ -208,10 +195,12 @@ export default function Page() {
           <label htmlFor="name">Nombre</label>
           <input type="text" id="name" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
         </div>
+        
         <div className="campo-contacto">
           <label htmlFor="lastname">Apellido</label>
           <input type="text" id="lastname" value={apellido} onChange={(e) => setApellido(e.target.value)} required />
         </div>
+
         <div className="campo-contacto">
           <label htmlFor="cedula">Cédula</label>
           <input
@@ -228,22 +217,7 @@ export default function Page() {
             </p>
           )}
         </div>
-        <div className="campo-contacto">
-          <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
-          <input
-            type="date"
-            id="fechaNacimiento"
-            value={fechaNacimiento}
-            onChange={(e) => setFechaNacimiento(e.target.value)}
-            required
-            className={fechaNacimiento !== '' && !fechaNacimientoValida ? 'input-error' : ''}
-          />
-          {fechaNacimiento !== '' && !fechaNacimientoValida && (
-            <p className="error-validacion">
-              ❌ Debes tener al menos 18 años para participar.
-            </p>
-          )}
-        </div>
+
         <div className="campo-contacto">
           <label htmlFor="correo">Correo Electrónico</label>
           <input
@@ -260,6 +234,7 @@ export default function Page() {
             </p>
           )}
         </div>
+
         <div className="campo-contacto">
           <label htmlFor="telefono">Número de Teléfono</label>
           <input
@@ -272,11 +247,12 @@ export default function Page() {
           />
           {telefono !== '' && !telefonoValido && (
             <p className="error-validacion">
-              ❌ El número debe comenzar con 0426, 0416, 0414, 0424, 0412 o 0422 y tener 11 dígitos.
+              ❌ El número de telefono no es valido
             </p>
           )}
         </div>
       </div>
+
       <div className="metodo-pago" style={{ marginTop: '2rem' }}>
         <h3 className="titulo-dorado"><FaCreditCard /> Método de Pago</h3>
         <div className="opciones-pago">
