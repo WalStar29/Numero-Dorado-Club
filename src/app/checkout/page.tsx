@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import ResumenCompra from '@/components/ResumenCompra'
 import '@/styles/Checkout.css'
-import { FaCreditCard, FaMobileAlt } from 'react-icons/fa'
+import { FaCreditCard, FaMobileAlt, FaRegCopy } from 'react-icons/fa'
 import { SiBinance } from 'react-icons/si'
 import { MdWarningAmber, MdContactPage } from 'react-icons/md'
 import { setDoc, doc, getDoc } from 'firebase/firestore'
@@ -160,7 +160,43 @@ export default function Page() {
   }
 }
 
-  
+  // Función para limpiar y copiar
+  const copiarDato = (valor: string, tipo: string = "default") => {
+    let limpio = valor;
+    if (tipo === "cedula") {
+      limpio = valor.replace(/^V-\s*/, "").replace(/[^0-9]/g, "");
+    }
+    if (tipo === "telefono") {
+      // Elimina guiones, espacios y cualquier carácter no numérico
+      limpio = valor.replace(/[^0-9]/g, "");
+    }
+    navigator.clipboard.writeText(limpio);
+    alert(`Copiado: ${limpio}`);
+  };
+
+  // Función para mostrar campo con botón de copiar
+  const mostrarCampo = (label: string, valor: string, tipo: string = "default") =>
+    valor.trim() !== "" ? (
+      <p>
+        <strong>{label}:</strong> {valor}
+        <button
+          style={{
+            marginLeft: "0.5rem",
+            border: "none",
+            padding: "0.2rem 0.5rem",
+            borderRadius: "4px",
+            cursor: "pointer",
+            color: "#000",
+            fontWeight: "bold",
+          }}
+          onClick={() => copiarDato(valor, tipo)}
+          title="Copiar dato"
+        >
+          <FaRegCopy />
+        </button>
+      </p>
+    ) : null;
+
   return (
     <div>
       <Navbar />
@@ -254,52 +290,33 @@ export default function Page() {
           </button>
         </div>
 
-        {metodoPago === 'binance' && (
+        {metodoPago === "binance" && (
           <div className="info-pago">
             <h4>Binance</h4>
-            {renderDato('Titular', 'Walter-Cas')}
-            {renderDato('Binance UID', '545664561')}
-            {renderDato('Correo', 'castrowalter172913@hotmail.com')}
+            {mostrarCampo("Titular", "Walter-Cas")}
+            {mostrarCampo("Binance UID", "545664561")}
+            {mostrarCampo("Correo", "castrowalter172913@hotmail.com")}
             <p><strong>Monto a pagar:</strong> $ {totalUSD.toFixed(2)}</p>
-            <h5>Importante:</h5>
-            <ul>
-              <li>Envía el monto exacto mostrado en tu carrito</li>
-              <li>Guarda el comprobante de pago</li>
-              <li>El número de operación es obligatorio</li>
-              <li>Los pagos se verifican en 24–48 horas</li>
-            </ul>
           </div>
         )}
-        {metodoPago === 'movil' && (
+
+        {metodoPago === "movil" && (
           <div className="info-pago">
             <h4>Pago Móvil</h4>
-            {renderDato('Banco', 'BANCO NACINAL DE CREDITO')}
-            {renderDato('Teléfono', '0422-3939612')}
-            {renderDato('Cédula', 'V- 30.563.320-4')}
-            {renderDato('Titular', 'NUMERO DORADO CLUB')}
+            {mostrarCampo("Banco", "BANCO NACINAL DE CREDITO")}
+            {mostrarCampo("Teléfono", "0422-3939612", "telefono")}
+            {mostrarCampo("Cédula", "V- 30.563.320-4", "cedula")}
+            {mostrarCampo("Titular", "NUMERO DORADO CLUB")}
             <p><strong>Monto a pagar:</strong> Bs {totalBs.toFixed(2)}</p>
-            <h5>Importante:</h5>
-            <ul>
-              <li>Envía el monto exacto mostrado en tu carrito</li>
-              <li>Guarda el comprobante de pago</li>
-              <li>El número de operación es obligatorio</li>
-              <li>Los pagos se verifican en 24–48 horas</li>
-            </ul>
           </div>
         )}
-        {metodoPago === 'zelle' && (
+
+        {metodoPago === "zelle" && (
           <div className="info-pago">
             <h4>Zelle</h4>
-            {renderDato('Correo Zelle', 'Adrianaguerrero2890@gmail.com')}
-            {renderDato('Titular', 'Yennifer Guerrero Bastos')}
+            {mostrarCampo("Correo Zelle", "Adrianaguerrero2890@gmail.com")}
+            {mostrarCampo("Titular", "Yennifer Guerrero Bastos")}
             <p><strong>Monto a pagar:</strong> $ {totalUSD.toFixed(2)}</p>
-            <h5>Importante:</h5>
-            <ul>
-              <li>Envía el monto exacto mostrado en tu carrito</li>
-              <li>Guarda el comprobante de pago</li>
-              <li>El número de operación es obligatorio</li>
-              <li>Los pagos se verifican en 24–48 horas</li>
-            </ul>
           </div>
         )}
       </div>
