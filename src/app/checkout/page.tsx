@@ -57,15 +57,15 @@ export default function Page() {
   }, [])
 
   useEffect(() => {
-  const ahora = Date.now()
-  const entradaAnterior = localStorage.getItem('inicioCheckout')
+    const ahora = Date.now()
+    const entradaAnterior = localStorage.getItem('inicioCheckout')
 
-  if (!entradaAnterior) {
+    if (!entradaAnterior) {
       // 🧠 Primera vez que entra: se guarda el tiempo
       localStorage.setItem('inicioCheckout', ahora.toString())
     } else {
       const diferenciaMinutos = (ahora - parseInt(entradaAnterior)) / 1000 / 60
-      if (diferenciaMinutos > 10) {
+      if (diferenciaMinutos > 60) { // ⏱️ Ahora 60 minutos
         alert('⏳ Tiempo expirado. Por favor regrese a la página principal.')
         localStorage.removeItem('inicioCheckout')
         localStorage.removeItem('carritoNumeros')
@@ -73,14 +73,13 @@ export default function Page() {
         return
       }
     }
-
-    // ⏱️ Temporizador para mostrar alerta si permanece más de 10 minutos
+    // ⏱️ Temporizador para mostrar alerta si permanece más de 1 hora
     const temporizador = setTimeout(() => {
       alert('⏳ Tiempo expirado. Por favor regrese a la página principal.')
       localStorage.removeItem('inicioCheckout')
       localStorage.removeItem('carritoNumeros')
       router.replace('/')
-    }, 600000) // 10 minutos en milisegundos
+    }, 3600000) // 1 hora en milisegundos (60 * 60 * 1000)
 
     return () => clearTimeout(temporizador)
   }, [])
