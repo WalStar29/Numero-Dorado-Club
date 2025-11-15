@@ -99,6 +99,7 @@ export default function Page() {
     numerosUnicos.length > 0 &&
     (metodoPago === 'binance' || metodoPago === 'zelle' || bancoOperacion.trim() !== '')
 
+    
   const handleConfirmarCompra = async () => {
   if (enviando) return
   setEnviando(true)
@@ -125,7 +126,7 @@ export default function Page() {
         ? `Bs ${totalBs.toFixed(2)}`
         : `$${totalUSD.toFixed(2)}`,
       fechaHora,
-      estado: 'pendiente' // 👈 importante: se registra como pendiente
+      estado: 'pendiente' // 👈 siempre se registra como pendiente
     }
 
     const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
@@ -133,13 +134,13 @@ export default function Page() {
 
     if (docExistente.exists()) {
       const datosExistentes = docExistente.data()
-      // 🔒 Solo bloquea si ya está confirmada
-      if (datosExistentes.estado === 'confirmada') {
-        alert('🚫 Esta referencia ya está usada en una venta confirmada. Usa una diferente.')
+      // 🔒 Bloquea si está confirmada o pendiente
+      if (datosExistentes.estado === 'confirmada' || datosExistentes.estado === 'pendiente') {
+        alert('🚫 Esta referencia ya está registrada y aún no puede reutilizarse.')
         setEnviando(false)
         return
       }
-      // Si está pendiente o denegada, permitimos reutilizar la referencia
+      // ✅ Solo si está denegada permitimos reutilizar la referencia
     }
 
     await setDoc(referenciaDoc, nuevaVenta)
@@ -166,6 +167,7 @@ export default function Page() {
     setEnviando(false)
   }
 }
+
 
   // Función para limpiar y copiar
   const copiarDato = (valor: string, tipo: string = "default") => {
