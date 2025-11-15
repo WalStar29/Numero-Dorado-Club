@@ -124,19 +124,26 @@ export default function Page() {
       monto: metodoPago === 'movil'
         ? `Bs ${totalBs.toFixed(2)}`
         : `$${totalUSD.toFixed(2)}`,
-      fechaHora
+      fechaHora,
+      estado: 'pendiente' // 👈 importante: se registra como pendiente
     }
 
     const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
     const docExistente = await getDoc(referenciaDoc)
 
     if (docExistente.exists()) {
-      alert('⚠️ Ya existe una venta con esta referencia. Usa una diferente.')
-      setEnviando(false)
-      return
+      const datosExistentes = docExistente.data()
+      // 🔒 Solo bloquea si ya está confirmada
+      if (datosExistentes.estado === 'confirmada') {
+        alert('🚫 Esta referencia ya está usada en una venta confirmada. Usa una diferente.')
+        setEnviando(false)
+        return
+      }
+      // Si está pendiente o denegada, permitimos reutilizar la referencia
     }
 
     await setDoc(referenciaDoc, nuevaVenta)
+
     for (const num of nuevaVenta.numeros) {
       const ref = doc(db, 'estadoNumeros', num)
       await setDoc(ref, {
