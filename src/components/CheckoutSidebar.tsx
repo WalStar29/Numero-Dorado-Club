@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { FaTrash } from 'react-icons/fa'
 import { useRouter } from 'next/navigation'
+import { usePathname} from 'next/navigation'
 import '@/styles/CheckoutSidebar.css'
 
 type CheckoutSidebarProps = {
@@ -16,6 +17,7 @@ export default function CheckoutSidebar({
   onRemoveAll,
 }: CheckoutSidebarProps) {
   const router = useRouter()
+  const pathname = usePathname()  
   const [mostrarModal, setMostrarModal] = useState(false)
 
   const precioPorNumero = 1.0
@@ -29,7 +31,15 @@ export default function CheckoutSidebar({
     }
 
     localStorage.setItem('carritoNumeros', JSON.stringify(unicos))
-    router.push('/checkout')
+    
+    // 👇 Aquí defines origen antes de usarlo
+    const origen = localStorage.getItem('origenEnlace') || '/'
+
+    if (pathname === '/walter') {
+      router.push('/checkout/walter')
+    } else {
+      router.push('/checkout')
+    }
   }
 
   useEffect(() => {

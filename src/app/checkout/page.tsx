@@ -9,10 +9,11 @@ import { SiBinance } from 'react-icons/si'
 import { MdWarningAmber, MdContactPage } from 'react-icons/md'
 import { setDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
+import { usePathname } from 'next/navigation'
 
 export default function Page() {
   const router = useRouter()
-
+  const pathname = usePathname()
   const [seleccionados, setSeleccionados] = useState<number[]>([])
   const [nombre, setNombre] = useState('')
   const [apellido, setApellido] = useState('')
@@ -108,6 +109,7 @@ export default function Page() {
     const ahora = new Date()
     const fechaHora = ahora.toISOString()
     const bancoFinal = metodoPago === 'movil' ? bancoOperacion : 'No aplica'
+    const origen = pathname || '/'
 
     const nuevaVenta = {
       nombre,
@@ -126,7 +128,8 @@ export default function Page() {
         ? `Bs ${totalBs.toFixed(2)}`
         : `$${totalUSD.toFixed(2)}`,
       fechaHora,
-      estado: 'pendiente' // 👈 siempre se registra como pendiente
+      estado: 'pendiente', // 👈 siempre se registra como pendiente
+      origenEnlace: origen
     }
 
     const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
