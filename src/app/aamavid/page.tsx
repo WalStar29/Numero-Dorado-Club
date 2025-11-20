@@ -5,7 +5,7 @@ import Home from '../page' // reutilizas la home
 
 export default function WalterHome() {
     useEffect(() => {
-        localStorage.setItem('origenEnlace', '/walter')
+        localStorage.setItem('origenEnlace', '/aamavid')
     }, [])
 
     return <Home />

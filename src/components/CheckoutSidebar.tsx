@@ -35,8 +35,8 @@ export default function CheckoutSidebar({
     // 👇 Aquí defines origen antes de usarlo
     const origen = localStorage.getItem('origenEnlace') || '/'
 
-    if (pathname === '/walter') {
-      router.push('/checkout/walter')
+    if (pathname === '/aamavid') {
+      router.push('/checkout/aamavid')
     } else {
       router.push('/checkout')
     }
