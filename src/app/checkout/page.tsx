@@ -35,7 +35,7 @@ export default function Page() {
   const total = totalUSD
   const telefonoValido = /^((0426|0416|0414|0424|0412|0422)[0-9]{7}|(\+58)?(4[1-2][2-6])[0-9]{7}|(\+34)?[6-7][0-9]{8}|(\+57)?3[0-9]{9}|(\+1)?[2-9][0-9]{2}[2-9][0-9]{6}|(\+593)?9[0-9]{8}|(\+51)?9[0-9]{8}|(\+55)?(1[1-9]|[2-9][0-9])[9][0-9]{8}|(\+56)?9[0-9]{8}|(\+54)?9[0-9]{10})$/.test(telefono);
   const cedulaValida = /^[0-9]{6,9}$/.test(cedula)
-  const correoValido = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(correo)
+  const correoValido = /^[a-z0-9._%+-]+@(gmail\.com|hotmail\.com|icloud\.com)$/i.test(correo);
 
   const metodoActivo = (metodo: string) =>
     metodoPago === metodo ? 'btn-metodo activo' : 'btn-metodo'

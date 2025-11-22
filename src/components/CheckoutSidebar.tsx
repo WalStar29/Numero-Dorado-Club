@@ -25,22 +25,24 @@ export default function CheckoutSidebar({
   const total = unicos.length * precioPorNumero
 
   const handleCheckout = () => {
-    if (unicos.length < 1) {
-      setMostrarModal(true)
-      return
-    }
-
-    localStorage.setItem('carritoNumeros', JSON.stringify(unicos))
-    
-    // 👇 Aquí defines origen antes de usarlo
-    const origen = localStorage.getItem('origenEnlace') || '/'
-
-    if (pathname === '/aamavid') {
-      router.push('/checkout/aamavid')
-    } else {
-      router.push('/checkout')
-    }
+  if (unicos.length < 1) {
+    setMostrarModal(true)
+    return
   }
+
+  localStorage.setItem('carritoNumeros', JSON.stringify(unicos))
+  
+  // 👇 Aquí defines origen antes de usarlo
+  const origen = localStorage.getItem('origenEnlace') || '/'
+
+  if (pathname === '/aamavid') {
+    router.push('/checkout/aamavid')
+  } else if (pathname === '/bachi') {
+    router.push('/checkout/bachi')
+  } else {
+    router.push('/checkout')
+  }
+}
 
   useEffect(() => {
     document.body.style.overflow = mostrarModal ? 'hidden' : 'auto'
