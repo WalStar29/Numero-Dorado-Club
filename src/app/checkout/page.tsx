@@ -210,7 +210,6 @@ export default function Page() {
       {numerosUnicos.length > 0 ? (
         <ResumenCompra
           seleccionados={numerosUnicos}
-          precioPorNumero={precioPorNumero}
           premio="iPhone 15 Pro Max 256GB"
           fechaSorteo="01 de noviembre de 2025"
           tasaCambio={tasaCambio}
