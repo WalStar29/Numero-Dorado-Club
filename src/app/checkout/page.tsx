@@ -27,12 +27,16 @@ export default function Page() {
   const [mostrarModal, setMostrarModal] = useState(false)
   const [mostrarConfirmacionFinal, setMostrarConfirmacionFinal] = useState(false)
   const [enviando, setEnviando] = useState(false)
-  const precioPorNumero = 1.0
+
   const tasaCambio = 250
   const numerosUnicos = Array.from(new Set(seleccionados))
+
+  // 👇 Precio dinámico: si hay 5 o más números, se reduce a la mitad
+  const precioPorNumero = numerosUnicos.length >= 5 ? 0.5 : 1.0
   const totalUSD = numerosUnicos.length * precioPorNumero
   const totalBs = totalUSD * tasaCambio
   const total = totalUSD
+
   const telefonoValido = /^((0426|0416|0414|0424|0412|0422)[0-9]{7}|(\+58)?(4[1-2][2-6])[0-9]{7}|(\+34)?[6-7][0-9]{8}|(\+57)?3[0-9]{9}|(\+1)?[2-9][0-9]{2}[2-9][0-9]{6}|(\+593)?9[0-9]{8}|(\+51)?9[0-9]{8}|(\+55)?(1[1-9]|[2-9][0-9])[9][0-9]{8}|(\+56)?9[0-9]{8}|(\+54)?9[0-9]{10})$/.test(telefono);
   const cedulaValida = /^[0-9]{6,9}$/.test(cedula)
   const correoValido = /^[a-z0-9._%+-]+@(gmail\.com|hotmail\.com|icloud\.com)$/i.test(correo);
@@ -62,11 +66,10 @@ export default function Page() {
     const entradaAnterior = localStorage.getItem('inicioCheckout')
 
     if (!entradaAnterior) {
-      // 🧠 Primera vez que entra: se guarda el tiempo
       localStorage.setItem('inicioCheckout', ahora.toString())
     } else {
       const diferenciaMinutos = (ahora - parseInt(entradaAnterior)) / 1000 / 60
-      if (diferenciaMinutos > 60) { // ⏱️ Ahora 60 minutos
+      if (diferenciaMinutos > 60) {
         alert('⏳ Tiempo expirado. Por favor regrese a la página principal.')
         localStorage.removeItem('inicioCheckout')
         localStorage.removeItem('carritoNumeros')
@@ -74,13 +77,12 @@ export default function Page() {
         return
       }
     }
-    // ⏱️ Temporizador para mostrar alerta si permanece más de 1 hora
     const temporizador = setTimeout(() => {
       alert('⏳ Tiempo expirado. Por favor regrese a la página principal.')
       localStorage.removeItem('inicioCheckout')
       localStorage.removeItem('carritoNumeros')
       router.replace('/')
-    }, 3600000) // 1 hora en milisegundos (60 * 60 * 1000)
+    }, 3600000)
 
     return () => clearTimeout(temporizador)
   }, [])
@@ -100,93 +102,86 @@ export default function Page() {
     numerosUnicos.length > 0 &&
     (metodoPago === 'binance' || metodoPago === 'zelle' || bancoOperacion.trim() !== '')
 
-    
   const handleConfirmarCompra = async () => {
-  if (enviando) return
-  setEnviando(true)
+    if (enviando) return
+    setEnviando(true)
 
-  try {
-    const ahora = new Date()
-    const fechaHora = ahora.toISOString()
-    const bancoFinal = metodoPago === 'movil' ? bancoOperacion : 'No aplica'
-    const origen = pathname || '/'
+    try {
+      const ahora = new Date()
+      const fechaHora = ahora.toISOString()
+      const bancoFinal = metodoPago === 'movil' ? bancoOperacion : 'No aplica'
+      const origen = pathname || '/'
 
-    const nuevaVenta = {
-      nombre,
-      apellido,
-      cedula,
-      telefono,
-      correo,
-      banco: bancoFinal,
-      metodo:
-        metodoPago === 'movil' ? 'Pago móvil' :
-        metodoPago === 'binance' ? 'Binance Pay' :
-        'Zelle',
-      numeros: numerosUnicos.map(n => n.toString().padStart(4, '0')),
-      referencia,
-      monto: metodoPago === 'movil'
-        ? `Bs ${totalBs.toFixed(2)}`
-        : `$${totalUSD.toFixed(2)}`,
-      fechaHora,
-      estado: 'pendiente', // 👈 siempre se registra como pendiente
-      origenEnlace: origen
-    }
-
-    const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
-    const docExistente = await getDoc(referenciaDoc)
-
-    if (docExistente.exists()) {
-      const datosExistentes = docExistente.data()
-      // 🔒 Bloquea si está confirmada o pendiente
-      if (datosExistentes.estado === 'confirmada' || datosExistentes.estado === 'pendiente') {
-        alert('🚫 Esta referencia ya está registrada y aún no puede reutilizarse.')
-        setEnviando(false)
-        return
+      const nuevaVenta = {
+        nombre,
+        apellido,
+        cedula,
+        telefono,
+        correo,
+        banco: bancoFinal,
+        metodo:
+          metodoPago === 'movil' ? 'Pago móvil' :
+          metodoPago === 'binance' ? 'Binance Pay' :
+          'Zelle',
+        numeros: numerosUnicos.map(n => n.toString().padStart(4, '0')),
+        referencia,
+        monto: metodoPago === 'movil'
+          ? `Bs ${totalBs.toFixed(2)}`
+          : `$${totalUSD.toFixed(2)}`,
+        fechaHora,
+        estado: 'pendiente',
+        origenEnlace: origen
       }
-      // ✅ Solo si está denegada permitimos reutilizar la referencia
+
+      const referenciaDoc = doc(db, 'ventasRegistradas', nuevaVenta.referencia)
+      const docExistente = await getDoc(referenciaDoc)
+
+      if (docExistente.exists()) {
+        const datosExistentes = docExistente.data()
+        if (datosExistentes.estado === 'confirmada' || datosExistentes.estado === 'pendiente') {
+          alert('🚫 Esta referencia ya está registrada y aún no puede reutilizarse.')
+          setEnviando(false)
+          return
+        }
+      }
+
+      await setDoc(referenciaDoc, nuevaVenta)
+
+      for (const num of nuevaVenta.numeros) {
+        const ref = doc(db, 'estadoNumeros', num)
+        await setDoc(ref, {
+          estado: 'reservado',
+          reservadoPor: 'confirmado',
+          timestamp: Date.now()
+        }, { merge: true })
+      }
+
+      localStorage.removeItem('carritoNumeros')
+      setSeleccionados([])
+      setMostrarModal(false)
+      setMostrarConfirmacionFinal(true)
+      alert(`✅ Compra registrada exitosamente.\nReferencia: ${referencia}`)
+
+    } catch (error) {
+      console.error('❌ Error:', error)
+      alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
+    } finally {
+      setEnviando(false)
     }
-
-    await setDoc(referenciaDoc, nuevaVenta)
-
-    for (const num of nuevaVenta.numeros) {
-      const ref = doc(db, 'estadoNumeros', num)
-      await setDoc(ref, {
-        estado: 'reservado',
-        reservadoPor: 'confirmado',
-        timestamp: Date.now()
-      }, { merge: true })
-    }
-
-    localStorage.removeItem('carritoNumeros')
-    setSeleccionados([])
-    setMostrarModal(false)
-    setMostrarConfirmacionFinal(true)
-    alert(`✅ Compra registrada exitosamente.\nReferencia: ${referencia}`)
-
-  } catch (error) {
-    console.error('❌ Error:', error)
-    alert('❌ Hubo un error al registrar tu compra. Intenta nuevamente.')
-  } finally {
-    setEnviando(false)
   }
-}
 
-
-  // Función para limpiar y copiar
   const copiarDato = (valor: string, tipo: string = "default") => {
     let limpio = valor;
     if (tipo === "cedula") {
       limpio = valor.replace(/^V-\s*/, "").replace(/[^0-9]/g, "");
     }
     if (tipo === "telefono") {
-      // Elimina guiones, espacios y cualquier carácter no numérico
       limpio = valor.replace(/[^0-9]/g, "");
     }
     navigator.clipboard.writeText(limpio);
     alert(`Copiado: ${limpio}`);
   };
 
-  // Función para mostrar campo con botón de copiar
   const mostrarCampo = (label: string, valor: string, tipo: string = "default") =>
     valor.trim() !== "" ? (
       <p>

@@ -4,7 +4,6 @@ import { MdShoppingCartCheckout } from 'react-icons/md'
 
 type ResumenCompraProps = {
   seleccionados: number[]
-  precioPorNumero: number
   premio: string
   fechaSorteo: string
   tasaCambio: number
@@ -12,11 +11,13 @@ type ResumenCompraProps = {
 
 export default function ResumenCompra({
   seleccionados,
-  precioPorNumero,
   tasaCambio,
 }: ResumenCompraProps) {
   // 🔒 Deduplicar antes de renderizar
   const unicos = [...new Set(seleccionados)]
+
+  // 👇 Precio dinámico: si hay 5 o más números, se reduce a la mitad
+  const precioPorNumero = unicos.length >= 5 ? 0.5 : 1.0
 
   const totalUSD = unicos.length * precioPorNumero
   const totalBs = totalUSD * tasaCambio

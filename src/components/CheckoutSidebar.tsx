@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { FaTrash } from 'react-icons/fa'
 import { useRouter } from 'next/navigation'
-import { usePathname} from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import '@/styles/CheckoutSidebar.css'
 
 type CheckoutSidebarProps = {
@@ -17,32 +17,33 @@ export default function CheckoutSidebar({
   onRemoveAll,
 }: CheckoutSidebarProps) {
   const router = useRouter()
-  const pathname = usePathname()  
+  const pathname = usePathname()
   const [mostrarModal, setMostrarModal] = useState(false)
 
-  const precioPorNumero = 1.0
   const unicos = [...new Set(seleccionados)]
+
+  // 👇 Precio dinámico: si hay 5 o más números, se reduce a la mitad
+  const precioPorNumero = unicos.length >= 5 ? 0.5 : 1.0
   const total = unicos.length * precioPorNumero
 
   const handleCheckout = () => {
-  if (unicos.length < 1) {
-    setMostrarModal(true)
-    return
-  }
+    if (unicos.length < 1) {
+      setMostrarModal(true)
+      return
+    }
 
-  localStorage.setItem('carritoNumeros', JSON.stringify(unicos))
-  
-  // 👇 Aquí defines origen antes de usarlo
-  const origen = localStorage.getItem('origenEnlace') || '/'
+    localStorage.setItem('carritoNumeros', JSON.stringify(unicos))
 
-  if (pathname === '/aamavid') {
-    router.push('/checkout/aamavid')
-  } else if (pathname === '/bachi') {
-    router.push('/checkout/bachi')
-  } else {
-    router.push('/checkout')
+    const origen = localStorage.getItem('origenEnlace') || '/'
+
+    if (pathname === '/aamavid') {
+      router.push('/checkout/aamavid')
+    } else if (pathname === '/bachi') {
+      router.push('/checkout/bachi')
+    } else {
+      router.push('/checkout')
+    }
   }
-}
 
   useEffect(() => {
     document.body.style.overflow = mostrarModal ? 'hidden' : 'auto'
