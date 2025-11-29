@@ -222,7 +222,7 @@ export default function Home() {
                     <p><strong>Números comprados:</strong></p>
                     <div className="numeros-list">
                       {ventaEncontrada.numeros?.length
-                        ? ventaEncontrada.numeros.map((num, idx) => (
+                        ? ventaEncontrada.numeros.map((num: string, idx: number) => (
                             <span key={idx} className="numero-badge">{num}</span>
                           ))
                         : <span className="numero-badge">{ventaEncontrada.numero}</span>
