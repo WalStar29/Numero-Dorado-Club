@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { doc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
 import Navbar from '@/components/Navbar'
 import PremioCard from '@/components/PremioCard'
@@ -103,6 +103,11 @@ export default function Home() {
   const [seleccionados, setSeleccionados] = useState<number[]>([])
   const [aceptoTerminos, setAceptoTerminos] = useState(false)
 
+  // 🔎 Estados para el modal de verificación
+  const [cedulaInput, setCedulaInput] = useState('')
+  const [ventaEncontrada, setVentaEncontrada] = useState<any | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
   const sessionId = typeof window !== 'undefined'
     ? localStorage.getItem('sessionId') || ''
     : ''
@@ -135,6 +140,19 @@ export default function Home() {
     }
   }
 
+  // 📌 Buscar venta por cédula en Firestore
+  const buscarPorCedula = async () => {
+    try {
+      const snap = await getDocs(collection(db, 'ventasRegistradas'))
+      const ventas = snap.docs.map(d => d.data())
+      const venta = ventas.find(v => v.cedula === cedulaInput.trim())
+      setVentaEncontrada(venta || null)
+      setIsOpen(true)
+    } catch (error) {
+      console.error('Error buscando por cédula:', error)
+    }
+  }
+  
   return (
     <main className="min-h-screen bg-white text-gray-900">
       <Navbar />
@@ -147,6 +165,16 @@ export default function Home() {
         <>
           <section className="max-w-6xl mx-auto px-4 py-10">
             <PremioCard />
+
+            {/* 🔎 Botón debajo de PremioCard */}
+            <div className="btn-wrapper">
+              <button
+                onClick={() => setIsOpen(true)}
+                className="btn-verificar"
+              >
+                Verificar número
+              </button>
+            </div>
           </section>
 
           <section className="layout-grid">
@@ -165,6 +193,50 @@ export default function Home() {
               />
             </div>
           </section>
+
+          {/* 🪟 Modal de verificación */}
+          {isOpen && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h3>Verificar Cliente</h3>
+                <input
+                  type="text"
+                  placeholder="Ingrese la cédula"
+                  value={cedulaInput}
+                  onChange={(e) => setCedulaInput(e.target.value)}
+                />
+
+                <div className="modal-actions">
+                  <button onClick={buscarPorCedula} className="bg-green-600">
+                    Buscar
+                  </button>
+                  <button onClick={() => setIsOpen(false)} className="close-btn">
+                    Cerrar
+                  </button>
+                </div>
+
+                {ventaEncontrada ? (
+                  <div className="venta-info mt-2">
+                    <p><strong>Nombre:</strong> {ventaEncontrada.nombre} {ventaEncontrada.apellido}</p>
+                    <p><strong>Cédula:</strong> {ventaEncontrada.cedula}</p>
+                    <p><strong>Números comprados:</strong></p>
+                    <div className="numeros-list">
+                      {ventaEncontrada.numeros?.length
+                        ? ventaEncontrada.numeros.map((num, idx) => (
+                            <span key={idx} className="numero-badge">{num}</span>
+                          ))
+                        : <span className="numero-badge">{ventaEncontrada.numero}</span>
+                      }
+                    </div>
+                  </div>
+                ) : (
+                  <p className="mt-2 text-sm text-red-600">
+                    ⚠️ No se encontró ninguna venta con esa cédula.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </>
       )}
     </main>
